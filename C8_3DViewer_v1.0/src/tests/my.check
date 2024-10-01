@@ -1,0 +1,1062 @@
+#include "../3DViewer/C/figure.h"
+#include "../3DViewer/C/point.h"
+#include "../3DViewer/C/points.h"
+#include "../3DViewer/C/faces.h"
+#include "../3DViewer/C/errors.h"
+#include "../3DViewer/C/edges.h"
+#include "../3DViewer/C/action_data.h"
+#include <stdlib.h>
+#include <stdio.h>
+
+
+#define eps 1e-3
+
+#test download1
+figure_t figure;
+char filename[] = "data_3d_figures/xxx.obj";
+int result = download_figure(&figure, filename);
+ck_assert_int_eq(result, FILE_EMPTY_ERROR);
+
+#test download2
+figure_t figure;
+char *filename = NULL;
+int result = download_figure(&figure, filename);
+ck_assert_int_eq(result, FILE_OPEN_ERROR);
+
+#test download3
+figure_t figure;
+char filename[] = "data_3d_figures/empty_file.obj";
+int result = download_figure(&figure, filename);
+ck_assert_int_eq(result, FILE_EMPTY_ERROR);
+
+#test p1
+point_t point;
+point_default(&point);
+ck_assert_double_eq_tol(point.x, 0.0, eps);
+ck_assert_double_eq_tol(point.y, 0.0, eps);
+ck_assert_double_eq_tol(point.z, 0.0, eps);
+ck_assert_int_eq(point.size, 0);
+ck_assert_ptr_null(point.pairs);
+
+#test move_all
+point_t point = {1.0, 2.0, 3.0, 0, 0};
+move_t move = {1.0, 2.0, 3.0};
+
+move_point(&point, &move);
+
+double expected_x = 2.0;
+double expected_y = 4.0;
+double expected_z = 6.0;
+
+ck_assert_double_eq_tol(point.x, expected_x, eps);
+ck_assert_double_eq_tol(point.y, expected_y, eps);
+ck_assert_double_eq_tol(point.z, expected_z, eps);
+
+#test move_x1
+point_t point = {1.0, 1.0, 1.0, 0, 0};
+move_t move = {10.0, 0.0, 0.0};
+
+move_point(&point, &move);
+
+double expected_x = 11.0;
+double expected_y = 1.0;
+double expected_z = 1.0;
+
+ck_assert_double_eq_tol(point.x, expected_x, eps);
+ck_assert_double_eq_tol(point.y, expected_y, eps);
+ck_assert_double_eq_tol(point.z, expected_z, eps);
+
+#test move_x2
+point_t point = {1.0, 1.0, 1.0, 0, 0};
+move_t move = {-10.0, 0.0, 0.0};
+
+move_point(&point, &move);
+
+double expected_x = -9.0;
+double expected_y = 1.0;
+double expected_z = 1.0;
+
+ck_assert_double_eq_tol(point.x, expected_x, eps);
+ck_assert_double_eq_tol(point.y, expected_y, eps);
+ck_assert_double_eq_tol(point.z, expected_z, eps);
+
+#test move_y1
+point_t point = {1.0, 1.0, 1.0, 0, 0};
+move_t move = {0.0, 10.0, 0.0};
+
+move_point(&point, &move);
+
+double expected_x = 1.0;
+double expected_y = 11.0;
+double expected_z = 1.0;
+
+ck_assert_double_eq_tol(point.x, expected_x, eps);
+ck_assert_double_eq_tol(point.y, expected_y, eps);
+ck_assert_double_eq_tol(point.z, expected_z, eps);
+
+#test move_y2
+point_t point = {1.0, 1.0, 1.0, 0, 0};
+move_t move = {0.0, -10.0, 0.0};
+
+move_point(&point, &move);
+
+double expected_x = 1.0;
+double expected_y = -9.0;
+double expected_z = 1.0;
+
+ck_assert_double_eq_tol(point.x, expected_x, eps);
+ck_assert_double_eq_tol(point.y, expected_y, eps);
+ck_assert_double_eq_tol(point.z, expected_z, eps);
+
+#test move_z1
+point_t point = {1.0, 1.0, 1.0, 0, 0};
+move_t move = {0.0, 0.0, 10.0};
+
+move_point(&point, &move);
+
+double expected_x = 1.0;
+double expected_y = 1.0;
+double expected_z = 11.0;
+
+ck_assert_double_eq_tol(point.x, expected_x, eps);
+ck_assert_double_eq_tol(point.y, expected_y, eps);
+ck_assert_double_eq_tol(point.z, expected_z, eps);
+
+#test move_z2
+point_t point = {1.0, 1.0, 1.0, 0, 0};
+move_t move = {0.0, 0.0, -10.0};
+
+move_point(&point, &move);
+
+double expected_x = 1.0;
+double expected_y = 1.0;
+double expected_z = -9.0;
+
+ck_assert_double_eq_tol(point.x, expected_x, eps);
+ck_assert_double_eq_tol(point.y, expected_y, eps);
+ck_assert_double_eq_tol(point.z, expected_z, eps);
+
+#test rotate_all
+point_t point = {1.0, 2.0, 3.0, 0, 0};
+point_t r_center = {0.0, 0.0, 0.0, 0, 0};
+rotate_t rotate = {90.0, 90.0, 90.0};
+
+rotate_point(&point, &r_center, &rotate);
+
+double expected_x = 3.0;
+double expected_y = 2.0;
+double expected_z = -1.0;
+
+ck_assert_double_eq_tol(point.x, expected_x, eps);
+ck_assert_double_eq_tol(point.y, expected_y, eps);
+ck_assert_double_eq_tol(point.z, expected_z, eps);
+
+#test scale_all1
+point_t point = {1.0, 2.0, 3.0, 0, 0};
+point_t s_center = {0.0, 0.0, 0.0, 0, 0};
+scale_t scale = {2.0, 2.0, 2.0};
+
+scale_point(&point, &s_center, &scale);
+
+double expected_x = 2.0;
+double expected_y = 4.0;
+double expected_z = 6.0;
+
+ck_assert_double_eq_tol(point.x, expected_x, eps);
+ck_assert_double_eq_tol(point.y, expected_y, eps);
+ck_assert_double_eq_tol(point.z, expected_z, eps);
+
+#test scale_all2
+point_t point = {1.0, 2.0, 3.0, 0, 0};
+point_t s_center = {0.0, 0.0, 0.0, 0, 0};
+scale_t scale = {0.5, 0.5, 0.5};
+
+scale_point(&point, &s_center, &scale);
+
+double expected_x = 0.5;
+double expected_y = 1.0;
+double expected_z = 1.5;
+
+ck_assert_double_eq_tol(point.x, expected_x, eps);
+ck_assert_double_eq_tol(point.y, expected_y, eps);
+ck_assert_double_eq_tol(point.z, expected_z, eps);
+
+#test scale_x1
+point_t point = {1.0, 2.0, 3.0, 0, 0};
+point_t s_center = {0.0, 0.0, 0.0, 0, 0};
+scale_t scale = {5.0, 1.0, 1.0};
+
+scale_point(&point, &s_center, &scale);
+
+double expected_x = 5.0;
+double expected_y = 2.0;
+double expected_z = 3.0;
+
+ck_assert_double_eq_tol(point.x, expected_x, eps);
+ck_assert_double_eq_tol(point.y, expected_y, eps);
+ck_assert_double_eq_tol(point.z, expected_z, eps);
+
+#test scale_x2
+point_t point = {1.0, 2.0, 3.0, 0, 0};
+point_t s_center = {0.0, 0.0, 0.0, 0, 0};
+scale_t scale = {0.5, 1.0, 1.0};
+
+scale_point(&point, &s_center, &scale);
+
+double expected_x = 0.5;
+double expected_y = 2.0;
+double expected_z = 3.0;
+
+ck_assert_double_eq_tol(point.x, expected_x, eps);
+ck_assert_double_eq_tol(point.y, expected_y, eps);
+ck_assert_double_eq_tol(point.z, expected_z, eps);
+
+#test scale_y1
+point_t point = {1.0, 2.0, 3.0, 0, 0};
+point_t s_center = {0.0, 0.0, 0.0, 0, 0};
+scale_t scale = {1.0, 5.0, 1.0};
+
+scale_point(&point, &s_center, &scale);
+
+double expected_x = 1.0;
+double expected_y = 10.0;
+double expected_z = 3.0;
+
+ck_assert_double_eq_tol(point.x, expected_x, eps);
+ck_assert_double_eq_tol(point.y, expected_y, eps);
+ck_assert_double_eq_tol(point.z, expected_z, eps);
+
+#test scale_y2
+point_t point = {1.0, 2.0, 3.0, 0, 0};
+point_t s_center = {0.0, 0.0, 0.0, 0, 0};
+scale_t scale = {1.0, 0.5, 1.0};
+
+scale_point(&point, &s_center, &scale);
+
+double expected_x = 1.0;
+double expected_y = 1.0;
+double expected_z = 3.0;
+
+ck_assert_double_eq_tol(point.x, expected_x, eps);
+ck_assert_double_eq_tol(point.y, expected_y, eps);
+ck_assert_double_eq_tol(point.z, expected_z, eps);
+
+#test scale_z1
+point_t point = {1.0, 2.0, 3.0, 0, 0};
+point_t s_center = {0.0, 0.0, 0.0, 0, 0};
+scale_t scale = {1.0, 1.0, 5.0};
+
+scale_point(&point, &s_center, &scale);
+
+double expected_x = 1.0;
+double expected_y = 2.0;
+double expected_z = 15.0;
+
+ck_assert_double_eq_tol(point.x, expected_x, eps);
+ck_assert_double_eq_tol(point.y, expected_y, eps);
+ck_assert_double_eq_tol(point.z, expected_z, eps);
+
+#test scale_z2
+point_t point = {1.0, 2.0, 3.0, 0, 0};
+point_t s_center = {0.0, 0.0, 0.0, 0, 0};
+scale_t scale = {1.0, 1.0, 0.5};
+
+scale_point(&point, &s_center, &scale);
+
+double expected_x = 1.0;
+double expected_y = 2.0;
+double expected_z = 1.5;
+
+ck_assert_double_eq_tol(point.x, expected_x, eps);
+ck_assert_double_eq_tol(point.y, expected_y, eps);
+ck_assert_double_eq_tol(point.z, expected_z, eps);
+
+#test pDef
+points_t points;
+points_default(&points);
+ck_assert_int_eq(points.capacity, 0);
+ck_assert_int_eq(points.size, 0);
+ck_assert_ptr_null(points.array_points);
+ck_assert_ptr_null(points.points_table);
+
+#test min_max1
+points_t points;
+points.size = 3;
+points.array_points = (point_t*)malloc(points.size * sizeof(point_t));
+points.array_points[0].x = 1.0;
+points.array_points[0].y = 2.0;
+points.array_points[0].z = 3.0;
+
+points.array_points[1].x = -1.0;
+points.array_points[1].y = -2.0;
+points.array_points[1].z = -3.0;
+
+points.array_points[2].x = 0.0;
+points.array_points[2].y = 0.0;
+points.array_points[2].z = 0.0;
+
+double min_x, max_x, min_y, max_y, min_z, max_z;
+find_min_max_points(&points, &min_x, &max_x, &min_y, &max_y, &min_z, &max_z);
+
+ck_assert_double_eq(min_x, -1.0);
+ck_assert_double_eq(max_x, 1.0);
+ck_assert_double_eq(min_y, -2.0);
+ck_assert_double_eq(max_y, 2.0);
+ck_assert_double_eq(min_z, -3.0);
+ck_assert_double_eq(max_z, 3.0);
+
+free(points.array_points);
+
+#test min_max2
+points_t points;
+points.size = 3;
+points.array_points = (point_t*)malloc(points.size * sizeof(point_t));
+points.array_points[0].x = 1.0;
+points.array_points[0].y = 2.0;
+points.array_points[0].z = 3.0;
+
+points.array_points[1].x = 1.0;
+points.array_points[1].y = 2.0;
+points.array_points[1].z = 3.0;
+
+points.array_points[2].x = 1.0;
+points.array_points[2].y = 2.0;
+points.array_points[2].z = 3.0;
+
+double min_x, max_x, min_y, max_y, min_z, max_z;
+find_min_max_points(&points, &min_x, &max_x, &min_y, &max_y, &min_z, &max_z);
+
+ck_assert_double_eq(min_x, 1.0);
+ck_assert_double_eq(max_x, 1.0);
+ck_assert_double_eq(min_y, 2.0);
+ck_assert_double_eq(max_y, 2.0);
+ck_assert_double_eq(min_z, 3.0);
+ck_assert_double_eq(max_z, 3.0);
+
+free(points.array_points);
+
+#test min_max3
+points_t points;
+points.size = 3;
+points.array_points = (point_t*)malloc(points.size * sizeof(point_t));
+points.array_points[0].x = -1.0;
+points.array_points[0].y = -2.0;
+points.array_points[0].z = -3.0;
+
+points.array_points[1].x = -10.0;
+points.array_points[1].y = -20.0;
+points.array_points[1].z = -30.0;
+
+points.array_points[2].x = 1.0;
+points.array_points[2].y = 2.0;
+points.array_points[2].z = 3.0;
+
+double min_x, max_x, min_y, max_y, min_z, max_z;
+find_min_max_points(&points, &min_x, &max_x, &min_y, &max_y, &min_z, &max_z);
+
+ck_assert_double_eq(min_x, -10.0);
+ck_assert_double_eq(max_x, 1.0);
+ck_assert_double_eq(min_y, -20.0);
+ck_assert_double_eq(max_y, 2.0);
+ck_assert_double_eq(min_z, -30.0);
+ck_assert_double_eq(max_z, 3.0);
+
+free(points.array_points);
+
+#test min_max4
+points_t points;
+points.size = 3;
+points.array_points = (point_t*)malloc(3 * sizeof(point_t));
+points.array_points[0].x = -1.0;
+points.array_points[0].y = -2.0;
+points.array_points[0].z = -3.0;
+
+points.array_points[1].x = -10.0;
+points.array_points[1].y = -20.0;
+points.array_points[1].z = -30.0;
+
+points.array_points[2].x = -11.0;
+points.array_points[2].y = -12.0;
+points.array_points[2].z = -13.0;
+
+double min_x, max_x, min_y, max_y, min_z, max_z;
+find_min_max_points(&points, &min_x, &max_x, &min_y, &max_y, &min_z, &max_z);
+
+ck_assert_double_eq(min_x, -11.0);
+ck_assert_double_eq(max_x, -1.0);
+ck_assert_double_eq(min_y, -20.0);
+ck_assert_double_eq(max_y, -2.0);
+ck_assert_double_eq(min_z, -30.0);
+ck_assert_double_eq(max_z, -3.0);
+
+free(points.array_points);
+
+#test min_max5
+points_t points;
+points.size = 3;
+points.array_points = (point_t*)malloc(3 * sizeof(point_t));
+points.array_points[0].x = -0.01;
+points.array_points[0].y = 0.1;
+points.array_points[0].z = 999.0;
+
+points.array_points[1].x = 0.1;
+points.array_points[1].y = 0.3;
+points.array_points[1].z = 0.0;
+
+points.array_points[2].x = 0.0;
+points.array_points[2].y = 0.2;
+points.array_points[2].z = -999.0;
+
+double min_x, max_x, min_y, max_y, min_z, max_z;
+find_min_max_points(&points, &min_x, &max_x, &min_y, &max_y, &min_z, &max_z);
+
+ck_assert_double_eq(min_x, -0.01);
+ck_assert_double_eq(max_x, 0.1);
+ck_assert_double_eq(min_y, 0.1);
+ck_assert_double_eq(max_y, 0.3);
+ck_assert_double_eq(min_z, -999.0);
+ck_assert_double_eq(max_z, 999.0);
+
+free(points.array_points);
+
+#test app_point
+points_t points;
+points.size = 0;
+points.capacity = 0;
+points.array_points = NULL;
+point_t point;
+point.x = 1;
+point.y = 2;
+point.z = 3;
+
+my_error_t result = append_point(&points, point);
+
+ck_assert_int_eq(result, SUCCESS);
+ck_assert_int_eq(points.size, 1);
+
+#test move_all_points1
+points_t points;
+points.array_points = (point_t*)malloc(3 * sizeof(point_t));
+points.capacity = 3;
+points.size = 3;
+
+move_t coeff = {1.0, 2.0, 3.0};
+ck_assert_int_eq(move_all_points(&points, &coeff), SUCCESS);
+
+free(points.array_points);
+
+
+#test move_all_points2
+points_t points;
+points.array_points = (point_t*)malloc(3 * sizeof(point_t));
+points.capacity = 3;
+points.size = 3;
+
+move_t coeff = {-1.0, -2.0, -3.0};
+ck_assert_int_eq(move_all_points(&points, &coeff), SUCCESS);
+
+free(points.array_points);
+
+
+#test rotate_all_points2
+points_t points;
+points.array_points = (point_t*)malloc(3 * sizeof(point_t));
+points.capacity = 3;
+points.size = 3;
+
+point_t center = {0.0, 0.0, 0.0, 0, 0};
+rotate_t coeff = {45.0, 0.0, 0.0};
+
+ck_assert_int_eq(rotate_all_points(&points, &center, &coeff), SUCCESS);
+
+free(points.array_points);
+
+
+#test rotate_all_points3
+points_t points;
+points.array_points = (point_t*)malloc(3 * sizeof(point_t));
+points.capacity = 3;
+points.size = 3;
+
+point_t center = {0.0, 0.0, 0.0, 0, 0};
+rotate_t coeff = {0.0, 45.0, 0.0};
+
+ck_assert_int_eq(rotate_all_points(&points, &center, &coeff), SUCCESS);
+
+free(points.array_points);
+
+
+#test rotate_all_points4
+points_t points;
+points.array_points = (point_t*)malloc(3 * sizeof(point_t));
+points.capacity = 3;
+points.size = 3;
+
+point_t center = {0.0, 0.0, 0.0, 0, 0};
+rotate_t coeff = {0.0, 0.0, 45.0};
+
+ck_assert_int_eq(rotate_all_points(&points, &center, &coeff), SUCCESS);
+
+free(points.array_points);
+
+
+#test rotate_all_points5
+points_t points;
+points.array_points = (point_t*)malloc(3 * sizeof(point_t));
+points.capacity = 3;
+points.size = 3;
+
+point_t center = {0.0, 0.0, 0.0, 0, 0};
+rotate_t coeff = {-45.0, 0.0, 0.0};
+
+ck_assert_int_eq(rotate_all_points(&points, &center, &coeff), SUCCESS);
+
+free(points.array_points);
+
+
+#test rotate_all_points6
+points_t points;
+points.array_points = (point_t*)malloc(3 * sizeof(point_t));
+points.capacity = 3;
+points.size = 3;
+
+point_t center = {0.0, 0.0, 0.0, 0, 0};
+rotate_t coeff = {0.0, -45.0, 0.0};
+
+ck_assert_int_eq(rotate_all_points(&points, &center, &coeff), SUCCESS);
+
+free(points.array_points);
+
+
+#test rotate_all_points7
+points_t points;
+points.array_points = (point_t*)malloc(3 * sizeof(point_t));
+points.capacity = 3;
+points.size = 3;
+
+point_t center = {0.0, 0.0, 0.0, 0, 0};
+rotate_t coeff = {0.0, 0.0, -45.0};
+
+ck_assert_int_eq(rotate_all_points(&points, &center, &coeff), SUCCESS);
+
+free(points.array_points);
+
+
+#test rotate_all_points8
+points_t points;
+points.array_points = (point_t*)malloc(3 * sizeof(point_t));
+points.capacity = 3;
+points.size = 3;
+
+point_t center = {0.0, 0.0, 0.0, 0, 0};
+rotate_t coeff = {0.0, 0.0, 0.0};
+
+ck_assert_int_eq(rotate_all_points(&points, &center, &coeff), SUCCESS);
+
+free(points.array_points);
+
+
+#test rotate_all_points9
+points_t points;
+points.array_points = (point_t*)malloc(3 * sizeof(point_t));
+points.capacity = 3;
+points.size = 3;
+
+point_t center = {0.0, 0.0, 0.0, 0, 0};
+rotate_t coeff = {45.0, 45.0, 45.0};
+
+ck_assert_int_eq(rotate_all_points(&points, &center, &coeff), SUCCESS);
+
+free(points.array_points);
+
+
+#test scale_all_points1
+points_t points;
+points.array_points = (point_t*)malloc(3 * sizeof(point_t));
+points.capacity = 3;
+points.size = 3;
+
+point_t center = {0.0, 0.0, 0.0, 0, 0};
+scale_t coeff = {2.0, 2.0, 2.0};
+
+ck_assert_int_eq(scale_all_points(&points, &center, &coeff), SUCCESS);
+
+free(points.array_points);
+
+
+#test scale_all_points2
+points_t points;
+points.array_points = (point_t*)malloc(3 * sizeof(point_t));
+points.capacity = 3;
+points.size = 3;
+
+point_t center = {0.0, 0.0, 0.0, 0, 0};
+scale_t coeff = {1.0, 1.0, 2.0};
+
+ck_assert_int_eq(scale_all_points(&points, &center, &coeff), SUCCESS);
+
+free(points.array_points);
+
+
+#test scale_all_points3
+points_t points;
+points.array_points = (point_t*)malloc(3 * sizeof(point_t));
+points.capacity = 3;
+points.size = 3;
+
+point_t center = {0.0, 0.0, 0.0, 0, 0};
+scale_t coeff = {1.0, 2.0, 1.0};
+
+ck_assert_int_eq(scale_all_points(&points, &center, &coeff), SUCCESS);
+
+free(points.array_points);
+
+
+#test scale_all_points4
+points_t points;
+points.array_points = (point_t*)malloc(3 * sizeof(point_t));
+points.capacity = 3;
+points.size = 3;
+
+point_t center = {0.0, 0.0, 0.0, 0, 0};
+scale_t coeff = {0.5, 0.5, 0.5};
+
+ck_assert_int_eq(scale_all_points(&points, &center, &coeff), SUCCESS);
+
+free(points.array_points);
+
+
+#test scale_all_points5
+points_t points;
+points.array_points = (point_t*)malloc(3 * sizeof(point_t));
+points.capacity = 3;
+points.size = 3;
+
+point_t center = {0.0, 0.0, 0.0, 0, 0};
+scale_t coeff = {0.0, 0.0, 0.0};
+
+ck_assert_int_eq(scale_all_points(&points, &center, &coeff), COEFF_SCALE_ERROR);
+
+free(points.array_points);
+
+#test face_init
+faces_t face;
+faces_default(&face);
+ck_assert_ptr_null(face.array_faces);
+ck_assert_int_eq(face.capacity, 0);
+ck_assert_int_eq(face.size, 0);
+
+#test edge
+edges_t edge;
+edges_default(&edge);
+ck_assert_ptr_null(edge.array_edges);
+ck_assert_int_eq(edge.last_index, -1);
+ck_assert_int_eq(edge.capacity, 0);
+ck_assert_int_eq(edge.size, 0);
+
+
+#test figure
+figure_t *figure = figure_init();
+
+ck_assert_double_eq_tol(figure->center.x, 0.0, eps);
+ck_assert_double_eq_tol(figure->center.y, 0.0, eps);
+ck_assert_double_eq_tol(figure->center.z, 0.0, eps);
+ck_assert_int_eq(figure->center.size, 0);
+ck_assert_ptr_null(figure->center.pairs);
+ck_assert_int_eq(figure->points.capacity, 0);
+ck_assert_int_eq(figure->points.size, 0);
+ck_assert_ptr_null(figure->points.array_points);
+ck_assert_ptr_null(figure->points.points_table);
+ck_assert_int_eq(figure->edges.last_index, -1);
+ck_assert_int_eq(figure->edges.capacity, 0);
+ck_assert_int_eq(figure->edges.size, 0);
+ck_assert_ptr_null(figure->edges.array_edges);
+ck_assert_ptr_null(figure->faces.array_faces);
+ck_assert_int_eq(figure->faces.capacity, 0);
+ck_assert_int_eq(figure->faces.size, 0);
+
+#test app_faces
+faces_t faces;
+faces.size = 0;
+faces.capacity = 0;
+faces.array_faces = NULL;
+face_t face;
+face.size = 3;
+face.capacity = 3;
+
+my_error_t result = append_face(&faces, face);
+
+ck_assert_int_eq(result, SUCCESS);
+ck_assert_int_eq(faces.size, 1);
+
+#test app_face
+face_t face;
+face.size = 0;
+face.capacity = 0;
+face.points = NULL;
+
+my_error_t result = append_face_point(&face, 3);
+
+ck_assert_int_eq(result, SUCCESS);
+ck_assert_int_eq(face.size, 1);
+
+#test alloc_edges_1
+edges_t edges;
+edges.size = 3;
+edges.capacity = 3;
+edges.last_index = -1;
+edges.array_edges = NULL;
+
+my_error_t result = allocate_edges(&edges);
+
+ck_assert_int_eq(result, SUCCESS);
+free(edges.array_edges);
+
+#test alloc_edges_2
+edges_t edges;
+edges.size = 0;
+edges.capacity = 3;
+edges.array_edges = NULL;
+edges.last_index = -1;
+
+my_error_t result = allocate_edges(&edges);
+
+ck_assert_int_eq(result, SIZE_EDGES_ERROR);
+free(edges.array_edges);
+
+#test app_edges
+edges_t edges;
+edges.size = 0;
+edges.capacity = 0;
+edges.last_index = -1;
+edges.array_edges = NULL;
+edge_t edge;
+edge.first_point = 1;
+edge.second_point = 2;
+
+my_error_t result = append_edge(&edges, edge);
+
+ck_assert_int_eq(result, SUCCESS);
+ck_assert_int_eq(edges.size, 1);
+
+#test figure_move_x
+figure_t figure;
+figure.center.x = 0.0;
+figure.center.y = 0.0;
+figure.center.z = 0.0;
+move_t move = {10.0, 0.0, 0.0};
+
+my_error_t result = move_figure(&figure, &move);
+
+ck_assert_int_eq(result, SUCCESS);
+
+#test figure_move_y
+figure_t figure;
+figure.center.x = 0.0;
+figure.center.y = 0.0;
+figure.center.z = 0.0;
+move_t move = {0.0, 10.0, 0.0};
+
+my_error_t result = move_figure(&figure, &move);
+
+ck_assert_int_eq(result, SUCCESS);
+
+#test figure_move_z
+figure_t figure;
+figure.center.x = 0.0;
+figure.center.y = 0.0;
+figure.center.z = 0.0;
+move_t move = {0.0, 0.0, 10.0};
+
+my_error_t result = move_figure(&figure, &move);
+
+ck_assert_int_eq(result, SUCCESS);
+
+#test figure_move_all_1
+figure_t figure;
+figure.center.x = 0.0;
+figure.center.y = 0.0;
+figure.center.z = 0.0;
+move_t move = {10.0, 10.0, 10.0};
+
+my_error_t result = move_figure(&figure, &move);
+
+ck_assert_int_eq(result, SUCCESS);
+
+#test figure_move_all_2
+figure_t figure;
+figure.center.x = 0.0;
+figure.center.y = 0.0;
+figure.center.z = 0.0;
+move_t move = {-10.0, -10.0, -10.0};
+
+my_error_t result = move_figure(&figure, &move);
+
+ck_assert_int_eq(result, SUCCESS);
+
+#test figure_scale_x
+figure_t figure;
+figure.center.x = 0.0;
+figure.center.y = 0.0;
+figure.center.z = 0.0;
+scale_t scale = {5.0, 1.0, 1.0};
+
+my_error_t result = scale_figure(&figure, &scale);
+
+ck_assert_int_eq(result, SUCCESS);
+
+#test figure_scale_y
+figure_t figure;
+figure.center.x = 0.0;
+figure.center.y = 0.0;
+figure.center.z = 0.0;
+scale_t scale = {1.0, 5.0, 1.0};
+
+my_error_t result = scale_figure(&figure, &scale);
+
+ck_assert_int_eq(result, SUCCESS);
+
+#test figure_scale_z
+figure_t figure;
+figure.center.x = 0.0;
+figure.center.y = 0.0;
+figure.center.z = 0.0;
+scale_t scale = {1.0, 1.0, 5.0};
+
+my_error_t result = scale_figure(&figure, &scale);
+
+ck_assert_int_eq(result, SUCCESS);
+
+#test figure_scale_all_1
+figure_t figure;
+figure.center.x = 0.0;
+figure.center.y = 0.0;
+figure.center.z = 0.0;
+scale_t scale = {5.0, 5.0, 5.0};
+
+my_error_t result = scale_figure(&figure, &scale);
+
+ck_assert_int_eq(result, SUCCESS);
+
+#test figure_scale_all_2
+figure_t figure;
+figure.center.x = 0.0;
+figure.center.y = 0.0;
+figure.center.z = 0.0;
+scale_t scale = {0.5, 0.5, 0.5};
+
+my_error_t result = scale_figure(&figure, &scale);
+
+ck_assert_int_eq(result, SUCCESS);
+
+#test figure_rotate_x
+figure_t figure;
+figure.center.x = 0.0;
+figure.center.y = 0.0;
+figure.center.z = 0.0;
+rotate_t rotate = {90.0, 0.0, 0.0};
+
+my_error_t result = rotate_figure(&figure, &rotate);
+
+ck_assert_int_eq(result, SUCCESS);
+
+#test figure_rotate_y
+figure_t figure;
+figure.center.x = 0.0;
+figure.center.y = 0.0;
+figure.center.z = 0.0;
+rotate_t rotate = {0.0, 90.0, 0.0};
+
+my_error_t result = rotate_figure(&figure, &rotate);
+
+ck_assert_int_eq(result, SUCCESS);
+
+#test figure_rotate_z
+figure_t figure;
+figure.center.x = 0.0;
+figure.center.y = 0.0;
+figure.center.z = 0.0;
+rotate_t rotate = {0.0, 0.0, 90.0};
+
+my_error_t result = rotate_figure(&figure, &rotate);
+
+ck_assert_int_eq(result, SUCCESS);
+
+#test figure_rotate_all_1
+figure_t figure;
+figure.center.x = 0.0;
+figure.center.y = 0.0;
+figure.center.z = 0.0;
+rotate_t rotate = {90.0, 90.0, 90.0};
+
+my_error_t result = rotate_figure(&figure, &rotate);
+
+ck_assert_int_eq(result, SUCCESS);
+
+#test figure_rotate_all_2
+figure_t figure;
+figure.center.x = 0.0;
+figure.center.y = 0.0;
+figure.center.z = 0.0;
+rotate_t rotate = {-90.0, -90.0, -90.0};
+
+my_error_t result = rotate_figure(&figure, &rotate);
+
+ck_assert_int_eq(result, SUCCESS);
+
+#test fread_test_1
+figure_t figure;
+FILE* file = fopen("data_3d_figures/Cube.obj", "r");
+
+my_error_t result = fread_figure(&figure, file);
+
+ck_assert_int_eq(result, SUCCESS);
+
+
+#test face_free
+faces_t faces;
+faces_default(&faces);
+
+faces.array_faces = malloc(sizeof(face_t) * 2);
+faces.size = 2;
+faces.capacity = 2;
+
+free_faces(&faces);
+
+ck_assert_int_eq(faces.size, 0);
+ck_assert_int_eq(faces.capacity, 0);
+ck_assert_ptr_null(faces.array_faces);
+
+#test points_free
+points_t points;
+points_default(&points);
+
+points.array_points = malloc(sizeof(point_t) * 2);
+points.size = 2;
+points.capacity = 2;
+
+int* row1 = malloc(sizeof(int) * 3);
+int* row2 = malloc(sizeof(int) * 3);
+points.points_table = malloc(sizeof(int*) * 3);
+points.points_table[0] = row1;
+points.points_table[1] = row2;
+
+free_points(&points);
+
+ck_assert_int_eq(points.size, 0);
+ck_assert_int_eq(points.capacity, 0);
+ck_assert_ptr_null(points.array_points);
+ck_assert_ptr_null(points.points_table);
+
+#test edges_free
+edges_t edges;
+edges_default(&edges);
+
+edges.array_edges = malloc(sizeof(edge_t) * 2);
+edges.size = 2;
+edges.capacity = 2;
+
+free_edges(&edges);
+
+ck_assert_int_eq(edges.last_index, -1);
+ck_assert_ptr_null(edges.array_edges);
+ck_assert_int_eq(edges.size, 0);
+ck_assert_int_eq(edges.capacity, 0);
+
+#test figure_free
+figure_t figure;
+char filename[] = "data_3d_figures/Cube.obj";
+FILE* file = fopen(filename, "r");
+fread_figure(&figure, file);
+
+free_figure(&figure);
+
+ck_assert_double_eq_tol(figure.center.x, 0.0, eps);
+ck_assert_double_eq_tol(figure.center.y, 0.0, eps);
+ck_assert_double_eq_tol(figure.center.z, 0.0, eps);
+ck_assert_int_eq(figure.center.size, 0);
+ck_assert_ptr_null(figure.center.pairs);
+ck_assert_int_eq(figure.points.capacity, 0);
+ck_assert_int_eq(figure.points.size, 0);
+ck_assert_ptr_null(figure.points.array_points);
+ck_assert_ptr_null(figure.points.points_table);
+ck_assert_int_eq(figure.edges.last_index, -1);
+ck_assert_int_eq(figure.edges.capacity, 0);
+ck_assert_int_eq(figure.edges.size, 0);
+ck_assert_ptr_null(figure.edges.array_edges);
+ck_assert_ptr_null(figure.faces.array_faces);
+ck_assert_int_eq(figure.faces.capacity, 0);
+ck_assert_int_eq(figure.faces.size, 0);
+
+#test figure_save_error
+figure_t figure;
+char filename[] = "data_3d_figures/Cube.obj";
+FILE* file = fopen(filename, "r");
+fread_figure(&figure, file);
+
+my_error_t result = save_figure(&figure, NULL);
+
+ck_assert_int_eq(result, FILE_WRITE_ERROR);
+
+#test face_save
+face_t face;
+face.points = malloc(sizeof(int) * 2);
+face.capacity = 2;
+face.size = 2;
+face.points[0] = 2;
+face.points[1] = 4;
+
+FILE* file = fopen("data_3d_figures/empty_file.obj", "w");
+
+my_error_t result = save_face(&face, file);
+ck_assert_int_eq(result, SUCCESS);
+
+free(face.points);
+
+#test figure_save
+figure_t figure;
+char filename[] = "data_3d_figures/Cube.obj";
+FILE* file = fopen(filename, "r");
+fread_figure(&figure, file);
+
+fclose(file);
+
+my_error_t result = save_figure(&figure, "data_3d_figures/empty_file.obj");
+
+ck_assert_int_eq(result, SUCCESS);
+
+#test face_save_all
+faces_t faces;
+faces.array_faces = malloc(sizeof(face_t) * 2);
+faces.size = 2;
+faces.capacity = 2;
+
+face_t face1;
+face1.points = malloc(sizeof(int) * 3);
+face1.size = 3;
+face1.capacity = 3;
+face1.points[0] = 1;
+face1.points[1] = 2;
+face1.points[2] = 3;
+faces.array_faces[0] = face1;
+
+face_t face2;
+face2.points = malloc(sizeof(int) * 3);
+face2.size = 3;
+face2.capacity = 3;
+face2.points[0] = 4;
+face2.points[1] = 5;
+face2.points[2] = 6;
+faces.array_faces[1] = face2;
+
+FILE* file = fopen("data_3d_figures/empty_file.obj", "w");
+
+my_error_t result = save_all_faces(&faces, file);
+ck_assert_int_eq(result, SUCCESS);
+
+free(face1.points);
+free(face2.points);
+free(faces.array_faces);
+
+fclose(file);
+
