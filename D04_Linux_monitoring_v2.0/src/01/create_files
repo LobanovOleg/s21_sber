@@ -1,0 +1,78 @@
+#!/bin/bash/
+
+. ./check_empty_space
+
+create_files() {
+
+file_name=""
+index_to_repeat=0
+name_w_ex=$(basename -- "$file_names")
+extension="${name_w_ex##*.}"
+name_w_ex="${name_w_ex%.*}"
+name_w_ex_length=${#name_w_ex}
+max_repetitions=235
+
+for dir in $(find $path -maxdepth 1 -mindepth 1 -type d); do
+	index_files=0
+	counter_to_repeat=0
+	while [ $index_files -lt $num_files ]; do
+		free_space=$(check_empty_space)
+		if [[ $free_space == "Enough free space" ]]; then
+
+			file_name=$(generate_filename)
+			file_name+="_"
+			file_name+=$(date +"%d%m%y")
+			fallocate -l $filesize"KB" $dir/$file_name"."$extension
+			((++index_files))
+			echo "File created: $(pwd $path)/$dir/$file_name"."$extension - $(date +"%d-%m-%Y") - $(du -h $dir/$file_name"."$extension | awk '{print $1}')" >> log_file.log
+			if [[ $counter_to_repeat -lt $max_repetitions ]]
+			then
+				((++counter_to_repeat))
+			else
+				counter_to_repeat=0
+				((++index_to_repeat))
+			fi
+		else
+			echo "There is less than 1GB free space left. Script will stop creating files"
+			exit 1
+		fi
+	done
+done
+
+}
+
+
+generate_filename() {
+
+
+	file_name_g_f=""
+
+	for (( letter_index=0; letter_index<$name_w_ex_length; ++letter_index ))
+	do
+		last_char_g_f="${file_name: -1}"
+		current_char_g_f="${name_w_ex: letter_index:1}"
+		if [[ $last_char != $current_char ]]
+		then
+			file_name_g_f+=$current_char_g_f;
+		fi
+
+		if [[ $letter_index -eq index_to_repeat ]]
+		then
+			for (( repeat_index=0; repeat_index<counter_to_repeat; ++repeat_index))
+			do
+			file_name_g_f+=$current_char_g_f;
+			done
+		fi
+	done
+
+	file_name_g_f_len=${#file_name_g_f}
+	last_char_file_name_g_f="${file_name_g_f: -1}"
+	while [ $file_name_g_f_len -lt 4 ]
+	do
+		file_name_g_f+=$last_char_file_name_g_f;
+		((++file_name_g_f_len))
+	done
+
+	echo $file_name_g_f
+
+}

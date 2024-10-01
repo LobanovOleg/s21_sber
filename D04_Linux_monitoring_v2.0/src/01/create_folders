@@ -1,0 +1,31 @@
+#!/bin/bash/
+
+create_folders() {
+
+folder_name=""
+counter_to_repeat=1
+
+for (( index_n_f=0; index_n_f<num_folders; ++index_n_f ))
+do
+	for (( index_f_n=0; index_f_n<=${#folder_names}; ++index_f_n ))
+	do
+		last_char="${folder_name: -1}"
+		current_char="${folder_names: index_f_n:1}"
+		if [[ $last_char != $current_char ]]
+		then
+			for ((index_r=0; index_r<counter_to_repeat; ++index_r))
+			do
+			folder_name+=$current_char;
+			done
+		fi
+	done
+	
+	folder_name+="_"
+	folder_name+=$(date +"%d%m%y")
+	mkdir $path/$folder_name
+	echo "Folder created: $(pwd $path)/$folder_name/ - $(date +"%d-%m-%Y") - $(du -h $path/$folder_name/ | awk '{print $1}')" >> log_file.log
+	folder_name=""
+	((++counter_to_repeat))
+done
+
+}

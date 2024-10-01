@@ -1,0 +1,82 @@
+#!/bin/bash/
+
+check_input() {
+
+# Check the num of variables
+num_arv=6
+if [ $# -ne $num_arv ]
+then
+	echo "There should be only 6 parameters. No more, no less"
+	# 7 - Argument list is too long code
+	exit 7
+fi
+
+# Check if the dir exists
+dir=$1
+if [ ! -d "$dir" ]
+then
+	echo "Directory doesn't exist. Please enter a valid directory"
+	# 2 - No such file or directory
+	exit 2
+fi
+
+# Check if the number of folders is really a number
+number_of_folders=$2
+if [[ "${number_of_folders}" =~ [^0-9] ]]
+then
+	echo "Number of folders should be only a number"
+	exit 1
+fi
+
+# Check the number of chars for folders
+max_char_folder_name=7
+len_folder_name=${#3}
+if [ $len_folder_name -gt $max_char_folder_name ]
+then
+	echo "Folder name shouldn't be greater than 7 chars"
+	# 36 - File name too long
+	exit 36
+fi
+
+# Check if the folder name is only letters
+folder_name=$3
+if [[ "${folder_name}" =~ [^a-zA-Z] ]]
+then
+	echo "Folder name should contain only letters"
+	exit 1
+fi
+
+# Check the number of files
+num_files=$4
+if [ $num_files -eq 0 ]
+then
+	echo "There should be more than 0 files"
+	exit 1
+fi
+if [[ "${num_files}" =~ [^0-9] ]]
+then
+	echo "Value should only be a number"
+fi
+
+
+# Check the filename
+filename_and_ext=$5
+regex="^[a-zA-Z]{1,7}[.][a-zA-Z]{1,3}$"
+if ! [[ $filename_and_ext =~ $regex ]] 
+then
+	echo "Input should be only like the following: string.exe"
+	echo "First part should be >= 1 && <= 7"
+	echo "Second part should be >= 1 && <= 3"
+	exit 1
+fi
+
+# Check the file size
+filesize_full=$(basename -- "$6")
+filesize="${filesize_full%k*}"
+if [[ filesize -le 0 ]] || [[ filesize -gt 100 ]]
+then
+	echo "Filesize cannot be zero, negative or greater than 100"
+	exit 1
+fi
+
+}
