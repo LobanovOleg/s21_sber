@@ -1,0 +1,10 @@
+services:
+  server:
+    build:
+      dockerfile: Dockerfile
+
+  nginx:
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - 80:8080
