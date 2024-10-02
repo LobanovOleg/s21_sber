@@ -1,0 +1,87 @@
+[
+    {
+        "question": "You are lying on your bed eating chips. Crumbs fall on your chest. What are you doing?",
+        "responses": [
+            "I'll use my thumb to pick them off my chest and eat them.",
+            "I'll pick up the crumbs and throw them in the trash.",
+            "Dump the crumbs on the floor"
+        ]
+        
+    },
+
+    {
+        "question": "You're vacuuming the carpet. One thread is not getting sucked up. You bend down, take the thread in your hand and do what?",
+        "responses": [
+            "I'll take it to the trash and keep vacuuming.",
+            "Throw it on the floor and give it a second chance.",
+            "Bring it to the vacuum to suck it up."
+        ]
+    },
+
+    {
+        "question": "You are standing in front of an open refrigerator and drop an ice cube on the floor. What do you do?",
+        "responses": [
+            "I'll discreetly kick the ice under the refrigerator.",
+            "I'll pick the ice up off the floor"
+        ]
+    },
+
+    {
+        "question": "You're picking out eggs at the supermarket. You open the carton and there are beaten eggs in the carton. What do you do?",
+        "responses": [
+            "I'll put this box aside and keep looking.",
+            "I'll open another box and swap the beaten eggs for whole ones.",
+            "I'll go complain to the salesman or manager."
+        ]
+    },
+
+    {
+        "question": "You have a can of cold beer in your hand. Your friend comes running over, shows you a lump on his forehead, and asks you for the can to relieve the swelling. What are your intentions?",
+        "responses": [
+            "A friend will return the jar already warm, I'll keep it and offer an alternative",
+            "My friend needs it more now, I'll give him a can of beer."
+        ]
+    },
+
+    {
+        "question": "You habitually go to the store. You are habitually pestered by Arkasha the drunkard asking for money for a hangover, but this time he promises to sing the song “Terminator” by the band “Leningrad” for your donation. What will you do?",
+        "responses": [
+            "I'll pass by, Arkasha is a low-down man who walks the road of lies and won't sing me a song.",
+            "I'll give 50 rubles, because in case of talent Arkasha has the opportunity to support a budding star."
+        ]
+    },
+
+    {
+        "question": "You are walking down the street and notice an unfamiliar and annoying person. You don't want to greet him. What do you do?",
+        "responses": [
+            "I'll punch him and move on.",
+            "I'll walk on by without making eye contact. No contact, no greeting.",
+            "I'll take out my phone and start digging around, maybe pretend I'm getting a call."
+        ]
+    },
+
+    {
+        "question": "You are paying at a supermarket checkout. The cashier gives you your change in bills and coins and is ready to serve the next customer. What do you do?",
+        "responses" : [
+            "I take my change and step away from the cash register, then put the coins and bills in my wallet.",
+            "I will put the change in my purse without leaving, but I will try to do it quickly."
+        ]
+    },
+
+    {
+        "question": "You sit down on a leather couch. It suddenly makes a squeaking sound like a fart. What do you do?",
+        "responses" : [
+            "I won't let it show because it can happen to anyone.",
+            "Immediately fake a fart sound so no one will suspect a fart."
+        ]
+    },
+
+    {
+        "question": "Your friend has started hiccupping out of the blue. He is very uncomfortable and you want the hiccups to stop. What do you do?",
+        "responses" : [
+            "I'll try to improve the moment to scare my friend - I know it's the best way.",
+            "I'll say out loud “hiccups and hiccups go to Fedot, from Fedot to Yakov, from Yakov to everyone” - this is the traditional way of dealing with hiccups.",
+            "I'll offer to drink some water."
+        ]
+    }
+]

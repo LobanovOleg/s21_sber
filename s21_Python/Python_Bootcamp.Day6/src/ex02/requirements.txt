@@ -1,0 +1,5 @@
+protobuf
+grpcio
+grpcio-tools
+pydantic
+psycopg2-binary

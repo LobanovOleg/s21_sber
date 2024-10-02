@@ -1,0 +1,11 @@
+1) run "python3 -m venv .venv"
+2) run "source .venv/bin/activate"
+3) run "pip install --upgrade pip"
+4) run "python3 -m pip install -r requirements.txt"
+5) run "python3 -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. space_ship.proto"
+6) run "python3 reporting_server.py"
+7) open second terminal window in the same path
+8) run "source .venv/bin/activate"
+9) run "python3 reporting_client_v3.py (6 numbers wich you want) int int float int int float"
+10) run "python3 reporting_client_v3.py scan (same 6 numbers)"
+11) run "python3 reporting_client_v3.py list_traitors"

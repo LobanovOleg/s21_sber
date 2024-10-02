@@ -1,0 +1,18 @@
+become: true
+hosts: webserver
+tasks:
+  - apt: name=python3 state=present
+    name: Install packages
+  - apt: name=nginx state=present
+    name: Install packages
+  - copy: src=exploit.py dest=/Users/lowban/Desktop/Python_Piscine/Python_Bootcamp.Day_03-1/exploit.py
+      mode=0644
+    name: Copy exploit files
+  - copy: src=consumer.py dest=/Users/lowban/Desktop/Python_Piscine/Python_Bootcamp.Day_03-1/consumer.py
+      mode=0644
+    name: Copy exploit files
+  - command: python3 /Users/lowban/Desktop/Python_Piscine/Python_Bootcamp.Day_03-1/src/consumer.py
+      -e 4815162342,3133780085
+    name: Run consumer.py on remote server with bad_guys argument
+  - command: python3 /Users/lowban/Desktop/Python_Piscine/Python_Bootcamp.Day_03-1/src/exploit.py
+    name: Run exploit.py on remote server

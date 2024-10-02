@@ -1,0 +1,34 @@
+Metadata-Version: 2.1
+Name: pyp2rpm
+Version: 3.3.10
+Summary: Convert Python packages to RPM SPECFILES
+Home-page: https://github.com/fedora-python/pyp2rpm
+Author: Bohuslav "Slavek" Kabrda, Robert Kuska, Michal Cyprian, Iryna Shcherbina
+Author-email: bkabrda@redhat.com, rkuska@redhat.com, mcyprian@redhat.com, ishcherb@redhat.com
+License: MIT
+Keywords: pypi,rpm,spec,specfile,convert
+Classifier: Development Status :: 4 - Beta
+Classifier: Environment :: Console
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: System Administrators
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Topic :: Software Development :: Build Tools
+Classifier: Topic :: System :: Software Distribution
+License-File: LICENSE
+Requires-Dist: Jinja2
+Requires-Dist: setuptools
+Requires-Dist: click
+Provides-Extra: sclize
+Requires-Dist: spec2scl (>=1.2.0) ; extra == 'sclize'
+Provides-Extra: venv_metadata
+Requires-Dist: virtualenv-api ; extra == 'venv_metadata'
+
+Convert Python packages to RPM SPECFILES. The packages can be downloaded from
+PyPI and the produced SPEC is in line with Fedora Packaging Guidelines or Mageia Python Policy.
+
+Users can provide their own templates for rendering the package metadata. Both the package
+source and metadata can be extracted from PyPI or from local filesystem (local file doesn't
+provide that much information though).
