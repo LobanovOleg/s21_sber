@@ -13,6 +13,7 @@ from sqlalchemy import (  # type: ignore
     ForeignKeyConstraint,
     CheckConstraint,
     PrimaryKeyConstraint,
+    UniqueConstraint,
 )
 
 
@@ -24,7 +25,6 @@ class Base(DeclarativeBase):
 
 class Class(Base):
     """The table with classnames"""
-
     __tablename__ = "classes"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -33,7 +33,6 @@ class Class(Base):
 
 class Person(Base):
     """The table stores NPC data"""
-
     __tablename__ = "persons"
 
     id: Mapped[str] = mapped_column(String)
@@ -47,9 +46,14 @@ class Person(Base):
     is_protagonist: Mapped[bool] = mapped_column(Boolean)
     pursuit_time: Mapped[int] = mapped_column(Integer, nullable=True)
     appearance: Mapped[str] = mapped_column(String)
+    weapon: Mapped[str] = mapped_column(String)
+    armor: Mapped[str] = mapped_column(String)
 
     items: Mapped[list["Person_Item"]] = relationship(
         argument="Person_Item", back_populates="person"
+    )
+    buff_items: Mapped[list["Person_BuffItem"]] = relationship(
+        argument="Person_BuffItem", back_populates="person"
     )
     weapons: Mapped[list["Person_Weapon"]] = relationship(
         argument="Person_Weapon", back_populates="person"
@@ -67,29 +71,33 @@ class Person(Base):
 
 class Item(Base):
     """The items belongs to NPCs"""
-
     __tablename__ = "items"
 
     id: Mapped[int] = mapped_column(
         Integer, primary_key=True, autoincrement=True
     )
     name: Mapped[str] = mapped_column(String)
+    is_tradable: Mapped[bool] = mapped_column(Boolean)
+    is_usable: Mapped[bool] = mapped_column(Boolean)
+    is_armor: Mapped[bool] = mapped_column(Boolean, nullable=True)
     description: Mapped[str] = mapped_column(String, nullable=True)
     buff_parameter: Mapped[int] = mapped_column(Integer, nullable=True)
+    buff_reusable: Mapped[bool] = mapped_column(Boolean, nullable=True)
     buff: Mapped[int] = mapped_column(Integer, nullable=True)
     debuff: Mapped[int] = mapped_column(Integer, nullable=True)
     duration: Mapped[int] = mapped_column(Integer, nullable=True)
     cost: Mapped[int] = mapped_column(Integer, nullable=True)
-    is_tradable: Mapped[bool] = mapped_column(Boolean)
 
     persons: Mapped[list["Person_Item"]] = relationship(
         argument="Person_Item", back_populates="item"
     )
+    buffs: Mapped[list["Person_BuffItem"]] = relationship(
+        argument="Person_BuffItem", back_populates="item"
+    )
 
 
 class Weapon(Base):
-    """The items belongs to NPCs"""
-
+    """The weapons belongs to NPCs"""
     __tablename__ = "weapons"
 
     id: Mapped[int] = mapped_column(
@@ -108,8 +116,7 @@ class Weapon(Base):
 
 
 class Quest(Base):
-    """The quests given by NPCs"""
-
+    """The quests belongs by NPCs"""
     __tablename__ = "quests"
 
     id: Mapped[int] = mapped_column(
@@ -118,14 +125,15 @@ class Quest(Base):
     brief: Mapped[str] = mapped_column(String)
     description: Mapped[str] = mapped_column(String)
     reward: Mapped[int] = mapped_column(Integer)
-    reward_item: Mapped[str] = mapped_column(String, nullable=True)
-    reward_item_quantity: Mapped[int] = mapped_column(Integer, nullable=True)
     kind: Mapped[int] = mapped_column(Integer)
     condition: Mapped[str] = mapped_column(String)
     is_done: Mapped[bool] = mapped_column(Boolean)
+    start_condition: Mapped[str] = mapped_column(String, nullable=True)
+    reward_item: Mapped[str] = mapped_column(String, nullable=True)
+    reward_item_quantity: Mapped[int] = mapped_column(Integer, nullable=True)
     pos: Mapped[list[int]] = mapped_column(ARRAY(Integer), nullable=True)
     item: Mapped[str] = mapped_column(String, nullable=True)
-    quantity: Mapped[str] = mapped_column(String, nullable=True)
+    quantity: Mapped[int] = mapped_column(Integer, nullable=True)
     location_id: Mapped[int] = mapped_column(Integer, nullable=True)
     giving_npc_id: Mapped[str] = mapped_column(String, nullable=True)
     receiving_npc_id: Mapped[str] = mapped_column(String, nullable=True)
@@ -138,9 +146,11 @@ class Quest(Base):
 
 class Person_Item(Base):
     """The items belongs to NPCs"""
-
     __tablename__ = "persons_items"
 
+    id: Mapped[int] = mapped_column(
+        Integer, primary_key=True, autoincrement=True
+    )
     person_id: Mapped[str] = mapped_column(String)
     save_id: Mapped[int] = mapped_column(Integer)
     item_id: Mapped[int] = mapped_column(Integer)
@@ -154,7 +164,41 @@ class Person_Item(Base):
     )
 
     __table_args__ = (
-        PrimaryKeyConstraint("person_id", "save_id", "item_id"),
+        UniqueConstraint("person_id", "save_id", "item_id"),
+        ForeignKeyConstraint(
+            ["person_id", "save_id"],
+            ["persons.id", "persons.save_id"],
+            ondelete="CASCADE",
+        ),
+        ForeignKeyConstraint(["item_id"], ["items.id"], ondelete="CASCADE"),
+    )
+
+
+class Person_BuffItem(Base):
+    """The items with boost effects belongs to NPCs
+
+    Items that enhance the player and have not lost their effect time
+    at the time of saving
+    """
+
+    __tablename__ = "persons_buff_items"
+
+    id: Mapped[int] = mapped_column(
+        Integer, primary_key=True, autoincrement=True
+    )
+    person_id: Mapped[str] = mapped_column(String)
+    save_id: Mapped[int] = mapped_column(Integer)
+    item_id: Mapped[int] = mapped_column(Integer)
+    duration: Mapped[int] = mapped_column(Integer)
+
+    person: Mapped[list["Person"]] = relationship(
+        argument="Person", back_populates="buff_items"
+    )
+    item: Mapped[list["Item"]] = relationship(
+        argument="Item", back_populates="buffs"
+    )
+
+    __table_args__ = (
         ForeignKeyConstraint(
             ["person_id", "save_id"],
             ["persons.id", "persons.save_id"],
@@ -166,9 +210,11 @@ class Person_Item(Base):
 
 class Person_Weapon(Base):
     """The weapons belongs to NPCs"""
-
     __tablename__ = "persons_weapons"
 
+    id: Mapped[int] = mapped_column(
+        Integer, primary_key=True, autoincrement=True
+    )
     person_id: Mapped[str] = mapped_column(String)
     save_id: Mapped[int] = mapped_column(Integer)
     weapon_id: Mapped[int] = mapped_column(Integer)
@@ -181,7 +227,7 @@ class Person_Weapon(Base):
     )
 
     __table_args__ = (
-        PrimaryKeyConstraint("person_id", "save_id", "weapon_id"),
+        UniqueConstraint("person_id", "save_id", "weapon_id"),
         ForeignKeyConstraint(
             ["person_id", "save_id"],
             ["persons.id", "persons.save_id"],
@@ -195,9 +241,11 @@ class Person_Weapon(Base):
 
 class Person_Quest(Base):
     """The persons id and belongs them quests"""
-
     __tablename__ = "persons_quests"
 
+    id: Mapped[int] = mapped_column(
+        Integer, primary_key=True, autoincrement=True
+    )
     person_id: Mapped[str] = mapped_column(String)
     save_id: Mapped[int] = mapped_column(Integer)
     quest_id: Mapped[int] = mapped_column(Integer)
@@ -211,7 +259,7 @@ class Person_Quest(Base):
     )
 
     __table_args__ = (
-        PrimaryKeyConstraint("person_id", "save_id", "quest_id"),
+        UniqueConstraint("person_id", "save_id", "quest_id"),
         ForeignKeyConstraint(
             ["person_id", "save_id"],
             ["persons.id", "persons.save_id"],
@@ -223,7 +271,6 @@ class Person_Quest(Base):
 
 class Save(Base):
     """The game saves tables"""
-
     __tablename__ = "saves"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)

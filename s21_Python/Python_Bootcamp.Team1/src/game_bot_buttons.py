@@ -1,5 +1,5 @@
 from aiogram.types import KeyboardButton  # type: ignore
-from typing import List
+from typing import List, Dict
 
 # CREATE PERSONAGE
 CREATE_PROT: str = "Создать персонажа! 🙋‍♂️"
@@ -59,6 +59,50 @@ REMOVE_SAVE: str = "Удалить сохранение 🗑"
 REMOVE_SAVE_BTN: KeyboardButton = KeyboardButton(text=REMOVE_SAVE)
 
 
+BTNS_MEAN: Dict[str, str] = {
+    "attack": "🗡",
+    "talk": "💬",
+    "whereami": "🧭",
+    "inventory": "💼",
+    "saves": "📜",
+    "up": "⬆️",
+    "down": "⬇️",
+    "left": "⬅️",
+    "right": "➡️",
+}
+
+DIR_BTNS_MEAN: Dict[str, str] = {
+    "North": "Север ❄️",
+    "South": "Юг ☀️",
+    "East": "Восток 🌄",
+    "West": "Запад 🤠",
+    "Begining": "Бухта встреч 🅱",
+}
+
+NORTH_BTNS_MEAN: Dict[str, int] = {
+    "🏔 Трактир на пристани": 2,
+    "🏞 Залив серебряных ракушек": 3,
+    "🏕 Сторожки в бору": 4,
+}
+
+SOUTH_BTNS_MEAN: Dict[str, int] = {
+    "🏖 Банановый остров": 5,
+    "🏜 Золотые закаты": 6,
+    "🏝 Коралловый грот": 7,
+}
+
+EAST_BTNS_MEAN: Dict[str, int] = {
+    "🏙 Пески востока": 8,
+    "🏞 Зеленая лагуна": 9,
+    "🏕 Базарные переулки": 10,
+}
+
+WEST_BTNS_MEAN: Dict[str, int] = {
+    "🏞 Долина озёр": 11,
+    "🏔 Ореховый лес": 12,
+    "🏕 Птичий полуостров": 13,
+}
+
 # TALK
 TALK_WITH: str = "Поговорить 💬"
 TALK_WITH_BTN: KeyboardButton = KeyboardButton(text=TALK_WITH)
@@ -105,52 +149,6 @@ ESCAPE: str = "Попробовать сбежать 💨"
 ESCAPE_BTN: KeyboardButton = KeyboardButton(text=ESCAPE)
 
 LOOT: str = "Забрать снаряжение ✊"
-LOOT_BTN: KeyboardButton = KeyboardButton(text=LOOT)
-
-
-BTNS_MEAN = {
-    "attack": "🗡",
-    "talk": "💬",
-    "whereami": "🧭",
-    "inventory": "💼",
-    "saves": "📜",
-    "up": "⬆️",
-    "down": "⬇️",
-    "left": "⬅️",
-    "right": "➡️",
-}
-
-DIR_BTNS_MEAN = {
-    "North": "Север ❄️",
-    "South": "Юг ☀️",
-    "East": "Восток 🌄",
-    "West": "Запад 🤠",
-    "Begining": "Начало 🅱",
-}
-
-NORTH_BTNS_MEAN = {
-    "location 1": "🏔 Первая северная локация",
-    "location 2": "🏞 Вторая северная локация",
-    "location 3": "🏕 Третья северная локация",
-}
-
-SOUTH_BTNS_MEAN = {
-    "location 1": "🏖 Первая южная локация",
-    "location 2": "🏜 Вторая южная локация",
-    "location 3": "🏝 Третья южная локация",
-}
-
-EAST_BTNS_MEAN = {
-    "location 1": "🏙 Первая восточная локация",
-    "location 2": "🏞 Вторая восточная локация",
-    "location 3": "🏕 Третья восточная локация",
-}
-
-WEST_BTNS_MEAN = {
-    "location 1": "🏞 Первая западная локация",
-    "location 2": "🏔 Вторая западная локация",
-    "location 3": "🏕 Третья западная локация",
-}
 
 
 def get_game_buttons() -> List[List[KeyboardButton]]:
@@ -181,13 +179,14 @@ def get_game_buttons() -> List[List[KeyboardButton]]:
 
 
 def get_direction_buttons() -> List[List[KeyboardButton]]:
-    """Создает кнопки для направления и кнопку "Назад"
+    """Makes buttons for directions and back button
 
     Returns
     -------
     List[List[KeyboardButton]]
-        Список кнопок для многократной клавиатуры
+        The list of buttons for multiline keyboard
     """
+
     rows: List[List[KeyboardButton]] = []
     rows.append(
         [
@@ -214,40 +213,52 @@ def get_direction_buttons() -> List[List[KeyboardButton]]:
     return rows
 
 
-def get_north_buttons() -> List[List[KeyboardButton]]:
-    first_row = [
-        KeyboardButton(text=NORTH_BTNS_MEAN["location 1"]),
-        KeyboardButton(text=NORTH_BTNS_MEAN["location 2"]),
-        KeyboardButton(text=NORTH_BTNS_MEAN["location 3"]),
-    ]
-    return [first_row]
+def get_north_buttons() -> List[KeyboardButton]:
+    """North locations buttons
+
+    Returns
+    -------
+    List[KeyboardButton]
+        The list of north locations buttons
+    """
+
+    return [KeyboardButton(text=i) for i in NORTH_BTNS_MEAN]
 
 
-def get_south_buttons() -> List[List[KeyboardButton]]:
-    first_row = [
-        KeyboardButton(text=SOUTH_BTNS_MEAN["location 1"]),
-        KeyboardButton(text=SOUTH_BTNS_MEAN["location 2"]),
-        KeyboardButton(text=SOUTH_BTNS_MEAN["location 3"]),
-    ]
-    return [first_row]
+def get_south_buttons() -> List[KeyboardButton]:
+    """South locations buttons
+
+    Returns
+    -------
+    List[KeyboardButton]
+        The list of south locations buttons
+    """
+
+    return [KeyboardButton(text=i) for i in SOUTH_BTNS_MEAN]
 
 
-def get_east_buttons() -> List[List[KeyboardButton]]:
-    first_row = [
-        KeyboardButton(text=EAST_BTNS_MEAN["location 1"]),
-        KeyboardButton(text=EAST_BTNS_MEAN["location 2"]),
-        KeyboardButton(text=EAST_BTNS_MEAN["location 3"]),
-    ]
-    return [first_row]
+def get_east_buttons() -> List[KeyboardButton]:
+    """East locations buttons
+
+    Returns
+    -------
+    List[KeyboardButton]
+        The list of east locations buttons
+    """
+
+    return [KeyboardButton(text=i) for i in EAST_BTNS_MEAN]
 
 
-def get_west_buttons() -> List[List[KeyboardButton]]:
-    first_row = [
-        KeyboardButton(text=WEST_BTNS_MEAN["location 1"]),
-        KeyboardButton(text=WEST_BTNS_MEAN["location 2"]),
-        KeyboardButton(text=WEST_BTNS_MEAN["location 3"]),
-    ]
-    return [first_row]
+def get_west_buttons() -> List[KeyboardButton]:
+    """West locations buttons
+
+    Returns
+    -------
+    List[KeyboardButton]
+        The list of west locations buttons
+    """
+
+    return [KeyboardButton(text=i) for i in WEST_BTNS_MEAN]
 
 
 GAME_BTNS = get_game_buttons()
@@ -256,3 +267,9 @@ NORTH_BTNS = get_north_buttons()
 SOUTH_BTNS = get_south_buttons()
 EAST_BTNS = get_east_buttons()
 WEST_BTNS = get_west_buttons()
+ALL_DIRS_MEAN = {
+    **NORTH_BTNS_MEAN,
+    **SOUTH_BTNS_MEAN,
+    **EAST_BTNS_MEAN,
+    **WEST_BTNS_MEAN,
+}

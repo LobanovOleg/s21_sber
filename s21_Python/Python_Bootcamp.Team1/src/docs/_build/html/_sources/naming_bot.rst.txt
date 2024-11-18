@@ -1,0 +1,7 @@
+naming_bot module
+=================
+
+.. automodule:: naming_bot
+    :members:
+    :undoc-members:
+    :show-inheritance:

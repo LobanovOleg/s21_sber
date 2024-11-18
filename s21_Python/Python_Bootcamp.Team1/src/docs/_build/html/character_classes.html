@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>character_classes module &#8212; team01 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=686e5160" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=2709fde1"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="fill_data module" href="fill_data.html" />
+    <link rel="prev" title="all_maps module" href="all_maps.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="character-classes-module">
+<h1>character_classes module<a class="headerlink" href="#character-classes-module" title="Link to this heading">¶</a></h1>
+<p id="module-character_classes">The script describes the game characters and helper classes</p>
+<p>Script presents the game class - Protagonist and the classes for
+non-player characters - NPCs, also for convenience, the class - Enemy
+was added. At the same time, non-player classes are inherited from the
+game class. The script also provides separate classes for items,
+weapons and quests loaded via the database.</p>
+<p>Script requires annotations to annotate implicit NPC and ENEMY
+classes in Protagonist methods, defaultdict - to implement inventory,
+deque - to speed up the calculation of the minimum distance between
+cells, math - to round values, random - to imitate dice throw, copy -
+to makes deepcopy of items that belongs different persons, logging -
+shows mistakes, enum - to creates enumerates, dataclasses - to create
+dataclasses</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="character_classes.ClassID">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">character_classes.</span></span><span class="sig-name descname"><span class="pre">ClassID</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names=&lt;not</span> <span class="pre">given&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qualname=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary=None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#character_classes.ClassID" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></p>
+<p>Enumeration of class IDs in the game</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.ClassID.CIVIL">
+<span class="sig-name descname"><span class="pre">CIVIL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#character_classes.ClassID.CIVIL" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.ClassID.CONDOTR">
+<span class="sig-name descname"><span class="pre">CONDOTR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#character_classes.ClassID.CONDOTR" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.ClassID.CORSAIR">
+<span class="sig-name descname"><span class="pre">CORSAIR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#character_classes.ClassID.CORSAIR" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="character_classes.Direction">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">character_classes.</span></span><span class="sig-name descname"><span class="pre">Direction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#character_classes.Direction" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Position on the map</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Direction.x">
+<span class="sig-name descname"><span class="pre">x</span></span><a class="headerlink" href="#character_classes.Direction.x" title="Link to this definition">¶</a></dt>
+<dd><p>The x coordinate</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Direction.y">
+<span class="sig-name descname"><span class="pre">y</span></span><a class="headerlink" href="#character_classes.Direction.y" title="Link to this definition">¶</a></dt>
+<dd><p>The y coordinate</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="character_classes.EndTypes">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">character_classes.</span></span><span class="sig-name descname"><span class="pre">EndTypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names=&lt;not</span> <span class="pre">given&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qualname=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary=None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#character_classes.EndTypes" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></p>
+<p>Mini-game completion statuses</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.EndTypes.DRAW">
+<span class="sig-name descname"><span class="pre">DRAW</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#character_classes.EndTypes.DRAW" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.EndTypes.HERO_WIN">
+<span class="sig-name descname"><span class="pre">HERO_WIN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#character_classes.EndTypes.HERO_WIN" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.EndTypes.NOT_END">
+<span class="sig-name descname"><span class="pre">NOT_END</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#character_classes.EndTypes.NOT_END" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.EndTypes.NPC_WIN">
+<span class="sig-name descname"><span class="pre">NPC_WIN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#character_classes.EndTypes.NPC_WIN" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="character_classes.Enemy">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">character_classes.</span></span><span class="sig-name descname"><span class="pre">Enemy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#character_classes.Enemy" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#character_classes.NPC" title="character_classes.NPC"><code class="xref py py-class docutils literal notranslate"><span class="pre">NPC</span></code></a></p>
+<p>The enemy NPC class</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="character_classes.Item">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">character_classes.</span></span><span class="sig-name descname"><span class="pre">Item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buff_parameter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buff</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debuff</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cost</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_tradable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#character_classes.Item" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>The items belongs to NPCs</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Item.buff">
+<span class="sig-name descname"><span class="pre">buff</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#character_classes.Item.buff" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Item.buff_parameter">
+<span class="sig-name descname"><span class="pre">buff_parameter</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#character_classes.Item.buff_parameter" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Item.cost">
+<span class="sig-name descname"><span class="pre">cost</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#character_classes.Item.cost" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Item.debuff">
+<span class="sig-name descname"><span class="pre">debuff</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#character_classes.Item.debuff" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Item.description">
+<span class="sig-name descname"><span class="pre">description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#character_classes.Item.description" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Item.duration">
+<span class="sig-name descname"><span class="pre">duration</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#character_classes.Item.duration" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Item.id">
+<span class="sig-name descname"><span class="pre">id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#character_classes.Item.id" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Item.is_tradable">
+<span class="sig-name descname"><span class="pre">is_tradable</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#character_classes.Item.is_tradable" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Item.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#character_classes.Item.name" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="character_classes.ItemBuff">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">character_classes.</span></span><span class="sig-name descname"><span class="pre">ItemBuff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names=&lt;not</span> <span class="pre">given&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qualname=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary=None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#character_classes.ItemBuff" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></p>
+<p>Enumeration displaying parameters that can be enhanced</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.ItemBuff.DAMAGE">
+<span class="sig-name descname"><span class="pre">DAMAGE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#character_classes.ItemBuff.DAMAGE" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.ItemBuff.DEFENSE">
+<span class="sig-name descname"><span class="pre">DEFENSE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#character_classes.ItemBuff.DEFENSE" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.ItemBuff.HP">
+<span class="sig-name descname"><span class="pre">HP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#character_classes.ItemBuff.HP" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="character_classes.MiniGames">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">character_classes.</span></span><span class="sig-name descname"><span class="pre">MiniGames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names=&lt;not</span> <span class="pre">given&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qualname=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary=None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#character_classes.MiniGames" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Mini games you can play with the characters</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.MiniGames.GO">
+<span class="sig-name descname"><span class="pre">GO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Го'</span></em><a class="headerlink" href="#character_classes.MiniGames.GO" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="character_classes.NPC">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">character_classes.</span></span><span class="sig-name descname"><span class="pre">NPC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#character_classes.NPC" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#character_classes.Protagonist" title="character_classes.Protagonist"><code class="xref py py-class docutils literal notranslate"><span class="pre">Protagonist</span></code></a></p>
+<p>The non-playable character class</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="character_classes.NPC.give">
+<span class="sig-name descname"><span class="pre">give</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hero</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#character_classes.Protagonist" title="character_classes.Protagonist"><span class="pre">Protagonist</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">item</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#character_classes.Item" title="character_classes.Item"><span class="pre">Item</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#character_classes.Weapon" title="character_classes.Weapon"><span class="pre">Weapon</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">quantity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#character_classes.NPC.give" title="Link to this definition">¶</a></dt>
+<dd><p>Give the item to hero</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hero</strong> (<a class="reference internal" href="#character_classes.Protagonist" title="character_classes.Protagonist"><em>Protagonist</em></a>) – The game protagonist</p></li>
+<li><p><strong>item</strong> (<em>Union</em><em>[</em><a class="reference internal" href="#character_classes.Item" title="character_classes.Item"><em>Item</em></a><em>, </em><a class="reference internal" href="#character_classes.Weapon" title="character_classes.Weapon"><em>Weapon</em></a><em>]</em>) – Given item</p></li>
+<li><p><strong>quantity</strong> (<em>int</em><em>, </em><em>optional</em>) – The giving quantity, by default 1</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="character_classes.NPC.receive">
+<span class="sig-name descname"><span class="pre">receive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#character_classes.Item" title="character_classes.Item"><span class="pre">Item</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#character_classes.Weapon" title="character_classes.Weapon"><span class="pre">Weapon</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">quantity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#character_classes.NPC.receive" title="Link to this definition">¶</a></dt>
+<dd><p>Takes item from character</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>item</strong> (<em>Union</em><em>[</em><a class="reference internal" href="#character_classes.Item" title="character_classes.Item"><em>Item</em></a><em>, </em><a class="reference internal" href="#character_classes.Weapon" title="character_classes.Weapon"><em>Weapon</em></a><em>]</em>) – Taken item</p></li>
+<li><p><strong>quantity</strong> (<em>int</em><em>, </em><em>optional</em>) – The receiving quantity, by default 1</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="character_classes.Phrases">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">character_classes.</span></span><span class="sig-name descname"><span class="pre">Phrases</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names=&lt;not</span> <span class="pre">given&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qualname=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary=None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#character_classes.Phrases" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Enumeration the main phrases used in conversation</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Phrases.ACCEPT_QUEST">
+<span class="sig-name descname"><span class="pre">ACCEPT_QUEST</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Я</span> <span class="pre">берусь</span> <span class="pre">за</span> <span class="pre">задание'</span></em><a class="headerlink" href="#character_classes.Phrases.ACCEPT_QUEST" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Phrases.ANGRY_END_CON">
+<span class="sig-name descname"><span class="pre">ANGRY_END_CON</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Сдавайся!'</span></em><a class="headerlink" href="#character_classes.Phrases.ANGRY_END_CON" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Phrases.ANGRY_END_COR">
+<span class="sig-name descname"><span class="pre">ANGRY_END_COR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Стой,</span> <span class="pre">ты,</span> <span class="pre">презренный</span> <span class="pre">пес!'</span></em><a class="headerlink" href="#character_classes.Phrases.ANGRY_END_COR" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Phrases.DEFEAT">
+<span class="sig-name descname"><span class="pre">DEFEAT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Вы</span> <span class="pre">мертвы...'</span></em><a class="headerlink" href="#character_classes.Phrases.DEFEAT" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Phrases.END">
+<span class="sig-name descname"><span class="pre">END</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Бывай'</span></em><a class="headerlink" href="#character_classes.Phrases.END" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Phrases.END_CIV">
+<span class="sig-name descname"><span class="pre">END_CIV</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Иди</span> <span class="pre">с</span> <span class="pre">миром!'</span></em><a class="headerlink" href="#character_classes.Phrases.END_CIV" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Phrases.END_CON">
+<span class="sig-name descname"><span class="pre">END_CON</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Будь</span> <span class="pre">здоров,</span> <span class="pre">сослуживец!'</span></em><a class="headerlink" href="#character_classes.Phrases.END_CON" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Phrases.END_COR">
+<span class="sig-name descname"><span class="pre">END_COR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Прощай,</span> <span class="pre">дружище!'</span></em><a class="headerlink" href="#character_classes.Phrases.END_COR" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Phrases.ENEMY_DEFEAT">
+<span class="sig-name descname"><span class="pre">ENEMY_DEFEAT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'повержен'</span></em><a class="headerlink" href="#character_classes.Phrases.ENEMY_DEFEAT" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Phrases.GRATITUDE_CIV">
+<span class="sig-name descname"><span class="pre">GRATITUDE_CIV</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Спасибо</span> <span class="pre">за</span> <span class="pre">помощь!'</span></em><a class="headerlink" href="#character_classes.Phrases.GRATITUDE_CIV" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Phrases.GRATITUDE_CON">
+<span class="sig-name descname"><span class="pre">GRATITUDE_CON</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Благодарю,</span> <span class="pre">Ваша</span> <span class="pre">светлость!'</span></em><a class="headerlink" href="#character_classes.Phrases.GRATITUDE_CON" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Phrases.GRATITUDE_COR">
+<span class="sig-name descname"><span class="pre">GRATITUDE_COR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Спасибо,</span> <span class="pre">дружище!'</span></em><a class="headerlink" href="#character_classes.Phrases.GRATITUDE_COR" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Phrases.INIT">
+<span class="sig-name descname"><span class="pre">INIT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Приветствую'</span></em><a class="headerlink" href="#character_classes.Phrases.INIT" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Phrases.LETS_PLAY">
+<span class="sig-name descname"><span class="pre">LETS_PLAY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Давай</span> <span class="pre">сыграем'</span></em><a class="headerlink" href="#character_classes.Phrases.LETS_PLAY" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Phrases.QUEST_NEW">
+<span class="sig-name descname"><span class="pre">QUEST_NEW</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Будет</span> <span class="pre">поручение?'</span></em><a class="headerlink" href="#character_classes.Phrases.QUEST_NEW" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Phrases.REFUSE_QUEST">
+<span class="sig-name descname"><span class="pre">REFUSE_QUEST</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Я</span> <span class="pre">не</span> <span class="pre">буду</span> <span class="pre">этого</span> <span class="pre">делать'</span></em><a class="headerlink" href="#character_classes.Phrases.REFUSE_QUEST" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Phrases.UPSET_CIV">
+<span class="sig-name descname"><span class="pre">UPSET_CIV</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Ну</span> <span class="pre">может</span> <span class="pre">в</span> <span class="pre">следующий</span> <span class="pre">раз'</span></em><a class="headerlink" href="#character_classes.Phrases.UPSET_CIV" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Phrases.UPSET_CON">
+<span class="sig-name descname"><span class="pre">UPSET_CON</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Признаться,</span> <span class="pre">я</span> <span class="pre">ожидал</span> <span class="pre">более</span> <span class="pre">активных</span> <span class="pre">действий!'</span></em><a class="headerlink" href="#character_classes.Phrases.UPSET_CON" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Phrases.UPSET_COR">
+<span class="sig-name descname"><span class="pre">UPSET_COR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Эх,</span> <span class="pre">ну</span> <span class="pre">ты</span> <span class="pre">даешь,</span> <span class="pre">друже!'</span></em><a class="headerlink" href="#character_classes.Phrases.UPSET_COR" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Phrases.WHATS_NEW">
+<span class="sig-name descname"><span class="pre">WHATS_NEW</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Что</span> <span class="pre">нового?'</span></em><a class="headerlink" href="#character_classes.Phrases.WHATS_NEW" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Phrases.WHATS_QUEST">
+<span class="sig-name descname"><span class="pre">WHATS_QUEST</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Говори'</span></em><a class="headerlink" href="#character_classes.Phrases.WHATS_QUEST" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Phrases.WIN">
+<span class="sig-name descname"><span class="pre">WIN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Вы</span> <span class="pre">победили'</span></em><a class="headerlink" href="#character_classes.Phrases.WIN" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Phrases.WIN_REACT">
+<span class="sig-name descname"><span class="pre">WIN_REACT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Хорошо</span> <span class="pre">играешь!'</span></em><a class="headerlink" href="#character_classes.Phrases.WIN_REACT" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="character_classes.Position">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">character_classes.</span></span><span class="sig-name descname"><span class="pre">Position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names=&lt;not</span> <span class="pre">given&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qualname=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary=None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#character_classes.Position" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></p>
+<p>Enumeration to check the correctness of the position</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Position.CORRECT">
+<span class="sig-name descname"><span class="pre">CORRECT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#character_classes.Position.CORRECT" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Position.OBSTACLE">
+<span class="sig-name descname"><span class="pre">OBSTACLE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#character_classes.Position.OBSTACLE" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Position.OUT_FIELD">
+<span class="sig-name descname"><span class="pre">OUT_FIELD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#character_classes.Position.OUT_FIELD" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="character_classes.Protagonist">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">character_classes.</span></span><span class="sig-name descname"><span class="pre">Protagonist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Unknown'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#character_classes.Protagonist" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>The character that the player controls</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Protagonist.id">
+<span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#character_classes.Protagonist.id" title="Link to this definition">¶</a></dt>
+<dd><p>The uud4 generated unique identificator</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Protagonist.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#character_classes.Protagonist.name" title="Link to this definition">¶</a></dt>
+<dd><p>The character name</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Protagonist.class_id">
+<span class="sig-name descname"><span class="pre">class_id</span></span><a class="headerlink" href="#character_classes.Protagonist.class_id" title="Link to this definition">¶</a></dt>
+<dd><p>The character class identificator</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Protagonist.hp">
+<span class="sig-name descname"><span class="pre">hp</span></span><a class="headerlink" href="#character_classes.Protagonist.hp" title="Link to this definition">¶</a></dt>
+<dd><p>The health points of character</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Protagonist.level">
+<span class="sig-name descname"><span class="pre">level</span></span><a class="headerlink" href="#character_classes.Protagonist.level" title="Link to this definition">¶</a></dt>
+<dd><p>The level of character</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Protagonist.exp">
+<span class="sig-name descname"><span class="pre">exp</span></span><a class="headerlink" href="#character_classes.Protagonist.exp" title="Link to this definition">¶</a></dt>
+<dd><p>The experience required to control the level</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Protagonist.inventory">
+<span class="sig-name descname"><span class="pre">inventory</span></span><a class="headerlink" href="#character_classes.Protagonist.inventory" title="Link to this definition">¶</a></dt>
+<dd><p>The inventory of character</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Protagonist.questbook">
+<span class="sig-name descname"><span class="pre">questbook</span></span><a class="headerlink" href="#character_classes.Protagonist.questbook" title="Link to this definition">¶</a></dt>
+<dd><p>The list of given quests</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Protagonist.location_id">
+<span class="sig-name descname"><span class="pre">location_id</span></span><a class="headerlink" href="#character_classes.Protagonist.location_id" title="Link to this definition">¶</a></dt>
+<dd><p>The current game field matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Protagonist.__pos">
+<span class="sig-name descname"><span class="pre">__pos</span></span><a class="headerlink" href="#character_classes.Protagonist.__pos" title="Link to this definition">¶</a></dt>
+<dd><p>Current position of character</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#character_classes.Direction" title="character_classes.Direction">Direction</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Protagonist.weapon">
+<span class="sig-name descname"><span class="pre">weapon</span></span><a class="headerlink" href="#character_classes.Protagonist.weapon" title="Link to this definition">¶</a></dt>
+<dd><p>The weapon in hand</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#character_classes.Weapon" title="character_classes.Weapon">Weapon</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Protagonist.armor">
+<span class="sig-name descname"><span class="pre">armor</span></span><a class="headerlink" href="#character_classes.Protagonist.armor" title="Link to this definition">¶</a></dt>
+<dd><p>Equipped armor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#character_classes.Item" title="character_classes.Item">Item</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Protagonist.pursuit_time">
+<span class="sig-name descname"><span class="pre">pursuit_time</span></span><a class="headerlink" href="#character_classes.Protagonist.pursuit_time" title="Link to this definition">¶</a></dt>
+<dd><p>Pursuit time in moves</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Protagonist.appearance">
+<span class="sig-name descname"><span class="pre">appearance</span></span><a class="headerlink" href="#character_classes.Protagonist.appearance" title="Link to this definition">¶</a></dt>
+<dd><p>Character icon</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="character_classes.Protagonist.advance_exp">
+<span class="sig-name descname"><span class="pre">advance_exp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#character_classes.Protagonist.advance_exp" title="Link to this definition">¶</a></dt>
+<dd><p>Increase experience level and check level up</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>int</em>) – The experience value</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="character_classes.Protagonist.advance_level">
+<span class="sig-name descname"><span class="pre">advance_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#character_classes.Protagonist.advance_level" title="Link to this definition">¶</a></dt>
+<dd><p>Increase level</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>int</em><em>, </em><em>optional</em>) – The increase level, by default 1</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="character_classes.Protagonist.attack">
+<span class="sig-name descname"><span class="pre">attack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">assaulted</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#character_classes.Protagonist" title="character_classes.Protagonist"><span class="pre">Protagonist</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#character_classes.NPC" title="character_classes.NPC"><span class="pre">NPC</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#character_classes.Enemy" title="character_classes.Enemy"><span class="pre">Enemy</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_nested</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#character_classes.Protagonist.attack" title="Link to this definition">¶</a></dt>
+<dd><p>Calculating an attack on an assaulted</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>assaulted</strong> (<em>Union</em><em>[</em><a class="reference internal" href="#character_classes.Protagonist" title="character_classes.Protagonist"><em>Protagonist</em></a><em>, </em><a class="reference internal" href="#character_classes.NPC" title="character_classes.NPC"><em>NPC</em></a><em>, </em><a class="reference internal" href="#character_classes.Enemy" title="character_classes.Enemy"><em>Enemy</em></a><em>]</em>) – The person being attacked</p></li>
+<li><p><strong>data</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Data loaded from db</p></li>
+<li><p><strong>is_nested</strong> (<em>bool</em><em>, </em><em>optional</em>) – Is this a nested function, by default False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The result of attack</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="character_classes.Protagonist.calc_paths">
+<span class="sig-name descname"><span class="pre">calc_paths</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#character_classes.Direction" title="character_classes.Direction"><span class="pre">Direction</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_free</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#character_classes.Protagonist.calc_paths" title="Link to this definition">¶</a></dt>
+<dd><p>Calculates the distances from start position</p>
+<p>If the end position is specified - the calculation is only from
+start to end position</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>field</strong> (<em>List</em><em>[</em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em>) – The current location where the calculations take place</p></li>
+<li><p><strong>pos</strong> (<a class="reference internal" href="#character_classes.Direction" title="character_classes.Direction"><em>Direction</em></a>) – The start position</p></li>
+<li><p><strong>map_free</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – List of characters that can be used to build a path</p></li>
+<li><p><strong>end</strong> (<a class="reference internal" href="#character_classes.Direction" title="character_classes.Direction"><em>Direction</em></a><em>, </em><em>optional</em>) – The end position</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The matrix with calculated distances</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[List[int]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="character_classes.Protagonist.check_quests">
+<span class="sig-name descname"><span class="pre">check_quests</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">npc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#character_classes.NPC" title="character_classes.NPC"><span class="pre">NPC</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#character_classes.Protagonist.check_quests" title="Link to this definition">¶</a></dt>
+<dd><p>Сhecks whether the quest is finished or not</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>msg</strong> (<em>Message</em>) – The message that caused the command to be executed</p></li>
+<li><p><strong>npc</strong> (<a class="reference internal" href="#character_classes.NPC" title="character_classes.NPC"><em>NPC</em></a>) – NPC to talk to</p></li>
+<li><p><strong>data</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Data loaded from db</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="character_classes.Protagonist.choose_weakest">
+<span class="sig-name descname"><span class="pre">choose_weakest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cur_person</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#character_classes.Protagonist" title="character_classes.Protagonist"><span class="pre">Protagonist</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#character_classes.NPC" title="character_classes.NPC"><span class="pre">NPC</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#character_classes.Enemy" title="character_classes.Enemy"><span class="pre">Enemy</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">attack_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#character_classes.Protagonist" title="character_classes.Protagonist"><span class="pre">Protagonist</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#character_classes.NPC" title="character_classes.NPC"><span class="pre">NPC</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#character_classes.Enemy" title="character_classes.Enemy"><span class="pre">Enemy</span></a></span></span><a class="headerlink" href="#character_classes.Protagonist.choose_weakest" title="Link to this definition">¶</a></dt>
+<dd><p>Chooses the weakest person to attack</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Data loaded from db</p></li>
+<li><p><strong>cur_person</strong> (<em>Union</em><em>[</em><a class="reference internal" href="#character_classes.Protagonist" title="character_classes.Protagonist"><em>Protagonist</em></a><em>, </em><a class="reference internal" href="#character_classes.NPC" title="character_classes.NPC"><em>NPC</em></a><em>, </em><a class="reference internal" href="#character_classes.Enemy" title="character_classes.Enemy"><em>Enemy</em></a><em>]</em>) – The current attacker or assaulted person</p></li>
+<li><p><strong>attack_range</strong> (<em>int</em><em>, </em><em>optional</em>) – The range of choice the weakest person</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The weakest person in range</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Union[<a class="reference internal" href="#character_classes.Protagonist" title="character_classes.Protagonist">Protagonist</a>, <a class="reference internal" href="#character_classes.NPC" title="character_classes.NPC">NPC</a>, <a class="reference internal" href="#character_classes.Enemy" title="character_classes.Enemy">Enemy</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="character_classes.Protagonist.get_next_position">
+<span class="sig-name descname"><span class="pre">get_next_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">calc_field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_free</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#character_classes.Direction" title="character_classes.Direction"><span class="pre">Direction</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos_p</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#character_classes.Direction" title="character_classes.Direction"><span class="pre">Direction</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#character_classes.Direction" title="character_classes.Direction"><span class="pre">Direction</span></a></span></span><a class="headerlink" href="#character_classes.Protagonist.get_next_position" title="Link to this definition">¶</a></dt>
+<dd><p>Gets the smallest distance cell from start to end position</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>calc_field</strong> (<em>List</em><em>[</em><em>List</em><em>[</em><em>int</em><em>]</em><em>]</em>) – The matrix with calculated distances</p></li>
+<li><p><strong>field</strong> (<em>List</em><em>[</em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em>) – The current location where the calculations take place</p></li>
+<li><p><strong>map_free</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – List of characters that can be used to build a path</p></li>
+<li><p><strong>pos</strong> (<a class="reference internal" href="#character_classes.Direction" title="character_classes.Direction"><em>Direction</em></a>) – The start position</p></li>
+<li><p><strong>pos_p</strong> (<a class="reference internal" href="#character_classes.Direction" title="character_classes.Direction"><em>Direction</em></a>) – The end position</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Next position for the fastest rapprochement</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#character_classes.Direction" title="character_classes.Direction">Direction</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="character_classes.Protagonist.get_person_info">
+<span class="sig-name descname"><span class="pre">get_person_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#character_classes.Protagonist.get_person_info" title="Link to this definition">¶</a></dt>
+<dd><p>Gets person’s class, level, name, appearance and hp info
+:returns: Informational message
+:rtype: str</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="character_classes.Protagonist.give">
+<span class="sig-name descname"><span class="pre">give</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">npc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#character_classes.NPC" title="character_classes.NPC"><span class="pre">NPC</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">item</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#character_classes.Item" title="character_classes.Item"><span class="pre">Item</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#character_classes.Weapon" title="character_classes.Weapon"><span class="pre">Weapon</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">quantity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#character_classes.Protagonist.give" title="Link to this definition">¶</a></dt>
+<dd><p>Give the item</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>npc</strong> (<a class="reference internal" href="#character_classes.NPC" title="character_classes.NPC"><em>NPC</em></a>) – The receiving NPC</p></li>
+<li><p><strong>item</strong> (<em>Union</em><em>[</em><a class="reference internal" href="#character_classes.Item" title="character_classes.Item"><em>Item</em></a><em>, </em><a class="reference internal" href="#character_classes.Weapon" title="character_classes.Weapon"><em>Weapon</em></a><em>]</em>) – Given item</p></li>
+<li><p><strong>quantity</strong> (<em>int</em><em>, </em><em>optional</em>) – The giving quantity, by default 1</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="character_classes.Protagonist.go">
+<span class="sig-name descname"><span class="pre">go</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">direction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#character_classes.Direction" title="character_classes.Direction"><span class="pre">Direction</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#character_classes.Protagonist.go" title="Link to this definition">¶</a></dt>
+<dd><p>Changes the position of character</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>direction</strong> (<a class="reference internal" href="#character_classes.Direction" title="character_classes.Direction"><em>Direction</em></a>) – New current position</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="character_classes.Protagonist.heal">
+<span class="sig-name descname"><span class="pre">heal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#character_classes.Protagonist.heal" title="Link to this definition">¶</a></dt>
+<dd><p>Increase health points</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>int</em><em>, </em><em>optional</em>) – The strength of heal, by default 1</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="character_classes.Protagonist.is_correct_pos">
+<span class="sig-name descname"><span class="pre">is_correct_pos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_free</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_pos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#character_classes.Direction" title="character_classes.Direction"><span class="pre">Direction</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#character_classes.Position" title="character_classes.Position"><span class="pre">Position</span></a></span></span><a class="headerlink" href="#character_classes.Protagonist.is_correct_pos" title="Link to this definition">¶</a></dt>
+<dd><p>Checks the correctness of the given position</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>field</strong> (<em>List</em><em>[</em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em>) – The current location where the position checks</p></li>
+<li><p><strong>map_free</strong> (<em>_type_</em>) – List of characters in which the position is correct</p></li>
+<li><p><strong>new_pos</strong> (<a class="reference internal" href="#character_classes.Direction" title="character_classes.Direction"><em>Direction</em></a>) – The checked position</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The checked status</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#character_classes.Position" title="character_classes.Position">Position</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="character_classes.Protagonist.is_in_range">
+<span class="sig-name descname"><span class="pre">is_in_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">person</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#character_classes.Protagonist" title="character_classes.Protagonist"><span class="pre">Protagonist</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#character_classes.NPC" title="character_classes.NPC"><span class="pre">NPC</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#character_classes.Enemy" title="character_classes.Enemy"><span class="pre">Enemy</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmpr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#character_classes.Protagonist.is_in_range" title="Link to this definition">¶</a></dt>
+<dd><p>Returns whether person is within the range of comparator</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>person</strong> (<em>Union</em><em>[</em><a class="reference internal" href="#character_classes.Protagonist" title="character_classes.Protagonist"><em>Protagonist</em></a><em>, </em><a class="reference internal" href="#character_classes.NPC" title="character_classes.NPC"><em>NPC</em></a><em>, </em><a class="reference internal" href="#character_classes.Enemy" title="character_classes.Enemy"><em>Enemy</em></a><em>]</em>) – The given NPC</p></li>
+<li><p><strong>cmpr</strong> (<em>int</em>) – The comparison range</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if NPC in range</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="character_classes.Protagonist.loot">
+<span class="sig-name descname"><span class="pre">loot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">npcs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#character_classes.NPC" title="character_classes.NPC"><span class="pre">NPC</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#character_classes.Protagonist.loot" title="Link to this definition">¶</a></dt>
+<dd><p>Takes item from person and deletes person from list</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The name of looted person</p></li>
+<li><p><strong>data</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Data loaded from db</p></li>
+<li><p><strong>npcs</strong> (<em>List</em><em>[</em><a class="reference internal" href="#character_classes.NPC" title="character_classes.NPC"><em>NPC</em></a><em>]</em>) – List of NPCs the person is in</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The informational message about looted status</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="character_classes.Protagonist.not_in_range_message">
+<span class="sig-name descname"><span class="pre">not_in_range_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">assaulted</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#character_classes.Protagonist" title="character_classes.Protagonist"><span class="pre">Protagonist</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#character_classes.NPC" title="character_classes.NPC"><span class="pre">NPC</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#character_classes.Enemy" title="character_classes.Enemy"><span class="pre">Enemy</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_moved</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_change_assaulted</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#character_classes.Protagonist.not_in_range_message" title="Link to this definition">¶</a></dt>
+<dd><p>Creates message if attackers and assaulted not in range</p>
+<p>Attacker attacks new assaulted if new assaulted in range</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attacker</strong> (<em>Union</em><em>[</em><a class="reference internal" href="#character_classes.Protagonist" title="character_classes.Protagonist"><em>Protagonist</em></a><em>, </em><a class="reference internal" href="#character_classes.NPC" title="character_classes.NPC"><em>NPC</em></a><em>, </em><a class="reference internal" href="#character_classes.Enemy" title="character_classes.Enemy"><em>Enemy</em></a><em>]</em>) – The attacker person</p></li>
+<li><p><strong>assaulted</strong> (<em>Union</em><em>[</em><a class="reference internal" href="#character_classes.Protagonist" title="character_classes.Protagonist"><em>Protagonist</em></a><em>, </em><a class="reference internal" href="#character_classes.NPC" title="character_classes.NPC"><em>NPC</em></a><em>, </em><a class="reference internal" href="#character_classes.Enemy" title="character_classes.Enemy"><em>Enemy</em></a><em>]</em>) – The assaulted person</p></li>
+<li><p><strong>is_moved</strong> (<em>bool</em>) – True if attacker moved</p></li>
+<li><p><strong>is_change_assaulted</strong> (<em>bool</em>) – True if assaulted person changed</p></li>
+<li><p><strong>data</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Data loaded from db</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Information message about attacker moved and/or changed assaulted</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="character_classes.Protagonist.pass_adjacent_ells">
+<span class="sig-name descname"><span class="pre">pass_adjacent_сells</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#character_classes.Direction" title="character_classes.Direction"><span class="pre">Direction</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">side</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_diagonals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#character_classes.Direction" title="character_classes.Direction"><span class="pre">Direction</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#character_classes.Protagonist.pass_adjacent_ells" title="Link to this definition">¶</a></dt>
+<dd><p>Passing through adjacent cells of a given cell</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pos</strong> (<a class="reference internal" href="#character_classes.Direction" title="character_classes.Direction"><em>Direction</em></a>) – The given cell</p></li>
+<li><p><strong>side</strong> (<em>int</em><em>, </em><em>optional</em>) – The side of the square along which passing, by default 3</p></li>
+<li><p><strong>ignore_diagonals</strong> (<em>bool</em>) – <p>If it is forbidden to walk diagonally, by default False</p>
+<p>4   5   6   7   8
+3   2   3   4   9
+2   1  pos  5  10
+1   0   7   6  11
+0  15  14  13  12</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Yields<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Iterator[Direction]</em> – The next cell clockwise</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="character_classes.Protagonist.pursuit_handle">
+<span class="sig-name descname"><span class="pre">pursuit_handle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">enemy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#character_classes.Enemy" title="character_classes.Enemy"><span class="pre">Enemy</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_free</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">persecuted</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#character_classes.Enemy" title="character_classes.Enemy"><span class="pre">Enemy</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#character_classes.Protagonist.pursuit_handle" title="Link to this definition">¶</a></dt>
+<dd><p>Processing the movement of NPCs that are being pursued</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>enemy</strong> (<a class="reference internal" href="#character_classes.Enemy" title="character_classes.Enemy"><em>Enemy</em></a>) – The enemy in pursuit</p></li>
+<li><p><strong>field</strong> (<em>List</em><em>[</em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em>) – The current location where the protagonist in</p></li>
+<li><p><strong>map_free</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – List of characters that enemy can stand on</p></li>
+<li><p><strong>persecuted</strong> (<em>List</em><em>[</em><a class="reference internal" href="#character_classes.Enemy" title="character_classes.Enemy"><em>Enemy</em></a><em>]</em><em>:</em>) – List of enemies that haunt the protagonist</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>If the enemy is within the protagonists attack range</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="character_classes.Protagonist.quest_accept">
+<span class="sig-name descname"><span class="pre">quest_accept</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quest</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#character_classes.Quest" title="character_classes.Quest"><span class="pre">Quest</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#character_classes.Protagonist.quest_accept" title="Link to this definition">¶</a></dt>
+<dd><p>Accepts a completed quest</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>quest</strong> (<a class="reference internal" href="#character_classes.Quest" title="character_classes.Quest"><em>Quest</em></a>) – Accepted quest</p></li>
+<li><p><strong>data</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Data loaded from db</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Advancing experience and/or items message</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="character_classes.Protagonist.rapprochement">
+<span class="sig-name descname"><span class="pre">rapprochement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">person</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#character_classes.Protagonist" title="character_classes.Protagonist"><span class="pre">Protagonist</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#character_classes.NPC" title="character_classes.NPC"><span class="pre">NPC</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#character_classes.Enemy" title="character_classes.Enemy"><span class="pre">Enemy</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_free</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#character_classes.Protagonist.rapprochement" title="Link to this definition">¶</a></dt>
+<dd><p>Rapprochement self closer to a person by 1 cell</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>person</strong> (<em>Union</em><em>[</em><a class="reference internal" href="#character_classes.Protagonist" title="character_classes.Protagonist"><em>Protagonist</em></a><em>, </em><a class="reference internal" href="#character_classes.NPC" title="character_classes.NPC"><em>NPC</em></a><em>, </em><a class="reference internal" href="#character_classes.Enemy" title="character_classes.Enemy"><em>Enemy</em></a><em>]</em>) – The person with whom the rapprochement occurs</p></li>
+<li><p><strong>field</strong> (<em>List</em><em>[</em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em>) – The current location where the events take place</p></li>
+<li><p><strong>map_free</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – List of symbols that an person can stand on</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Did the rapprochement really happen</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="character_classes.Protagonist.set_pos">
+<span class="sig-name descname"><span class="pre">set_pos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#character_classes.Protagonist.set_pos" title="Link to this definition">¶</a></dt>
+<dd><p>Add new position</p>
+<section id="add">
+<h2>Add<a class="headerlink" href="#add" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>Direction</dt><dd><p>The new position</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="character_classes.Protagonist.take">
+<span class="sig-name descname"><span class="pre">take</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#character_classes.Item" title="character_classes.Item"><span class="pre">Item</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#character_classes.Weapon" title="character_classes.Weapon"><span class="pre">Weapon</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">quantity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#character_classes.Protagonist.take" title="Link to this definition">¶</a></dt>
+<dd><p>Take the item</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>item</strong> (<em>Union</em><em>[</em><a class="reference internal" href="#character_classes.Item" title="character_classes.Item"><em>Item</em></a><em>, </em><a class="reference internal" href="#character_classes.Weapon" title="character_classes.Weapon"><em>Weapon</em></a><em>]</em>) – Taken item</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="character_classes.Protagonist.take_hit">
+<span class="sig-name descname"><span class="pre">take_hit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#character_classes.Protagonist.take_hit" title="Link to this definition">¶</a></dt>
+<dd><p>Decrease healt point and die check</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>int</em><em>, </em><em>optional</em>) – the strength of hit, by default 1</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>Exception</strong> – Game Over exception</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="character_classes.Protagonist.talk_to">
+<span class="sig-name descname"><span class="pre">talk_to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">npc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#character_classes.NPC" title="character_classes.NPC"><span class="pre">NPC</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#character_classes.Enemy" title="character_classes.Enemy"><span class="pre">Enemy</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#character_classes.Protagonist.talk_to" title="Link to this definition">¶</a></dt>
+<dd><p>The dialogue with NPC</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>npc</strong> (<em>Union</em><em>[</em><a class="reference internal" href="#character_classes.NPC" title="character_classes.NPC"><em>NPC</em></a><em>, </em><a class="reference internal" href="#character_classes.Enemy" title="character_classes.Enemy"><em>Enemy</em></a><em>]</em>) – The character we are talking to</p></li>
+<li><p><strong>msg</strong> (<em>str</em>) – A text to be answered</p></li>
+<li><p><strong>data</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Data loaded from db</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The replica and list of possible responses to this replica</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="character_classes.Protagonist.throw">
+<span class="sig-name descname"><span class="pre">throw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#character_classes.Item" title="character_classes.Item"><span class="pre">Item</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#character_classes.Weapon" title="character_classes.Weapon"><span class="pre">Weapon</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">quantity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#character_classes.Protagonist.throw" title="Link to this definition">¶</a></dt>
+<dd><p>Dropping an item and losing it</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>item</strong> (<em>Union</em><em>[</em><a class="reference internal" href="#character_classes.Item" title="character_classes.Item"><em>Item</em></a><em>, </em><a class="reference internal" href="#character_classes.Weapon" title="character_classes.Weapon"><em>Weapon</em></a><em>]</em>) – The throwing item</p></li>
+<li><p><strong>quantity</strong> (<em>int</em><em>, </em><em>optional</em>) – The quatity to throw, by default 1</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="character_classes.Protagonist.union_handle">
+<span class="sig-name descname"><span class="pre">union_handle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_free</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">npc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#character_classes.NPC" title="character_classes.NPC"><span class="pre">NPC</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#character_classes.Protagonist.union_handle" title="Link to this definition">¶</a></dt>
+<dd><p>Processing the movement of NPCs who are in an alliance</p>
+<p>NPC is located on the first free cell clockwise</p>
+<dl class="simple">
+<dt>Parameters</dt><dd><dl class="simple">
+<dt>field<span class="classifier">List[List[str]]</span></dt><dd><p>The current location where the protagonist in</p>
+</dd>
+<dt>map_free<span class="classifier">List[str]</span></dt><dd><p>List of characters that NPC can stand on</p>
+</dd>
+<dt>npc<span class="classifier">NPC</span></dt><dd><p>The NPC in union</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>2  3  4
+1 pos 5
+0  7  6</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="character_classes.Protagonist.wear_best_equip">
+<span class="sig-name descname"><span class="pre">wear_best_equip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#character_classes.Item" title="character_classes.Item"><span class="pre">Item</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#character_classes.Weapon" title="character_classes.Weapon"><span class="pre">Weapon</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#character_classes.Protagonist.wear_best_equip" title="Link to this definition">¶</a></dt>
+<dd><p>Wears another armor or choose another weapon</p>
+<p>If the current armor or weapon is discarded, its best analogue
+is selected</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>item</strong> (<em>Union</em><em>[</em><a class="reference internal" href="#character_classes.Item" title="character_classes.Item"><em>Item</em></a><em>, </em><a class="reference internal" href="#character_classes.Weapon" title="character_classes.Weapon"><em>Weapon</em></a><em>]</em>) – The discarded item</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="character_classes.Protagonist.whereami">
+<span class="sig-name descname"><span class="pre">whereami</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#character_classes.Direction" title="character_classes.Direction"><span class="pre">Direction</span></a></span></span><a class="headerlink" href="#character_classes.Protagonist.whereami" title="Link to this definition">¶</a></dt>
+<dd><p>Returns current position</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The current position</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#character_classes.Direction" title="character_classes.Direction">Direction</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="character_classes.Quest">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">character_classes.</span></span><span class="sig-name descname"><span class="pre">Quest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">brief:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reward:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reward_item:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reward_item_quantity:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_condition:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_done:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos:</span> <span class="pre">~typing.List[int]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">item:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quantity:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location_id:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">giving_npc_id:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">receiving_npc_id:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_id:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#character_classes.Quest" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>The quests belongs by NPCs</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Quest.brief">
+<span class="sig-name descname"><span class="pre">brief</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#character_classes.Quest.brief" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Quest.class_id">
+<span class="sig-name descname"><span class="pre">class_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#character_classes.Quest.class_id" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Quest.condition">
+<span class="sig-name descname"><span class="pre">condition</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#character_classes.Quest.condition" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Quest.description">
+<span class="sig-name descname"><span class="pre">description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#character_classes.Quest.description" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Quest.giving_npc_id">
+<span class="sig-name descname"><span class="pre">giving_npc_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#character_classes.Quest.giving_npc_id" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Quest.id">
+<span class="sig-name descname"><span class="pre">id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#character_classes.Quest.id" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Quest.is_done">
+<span class="sig-name descname"><span class="pre">is_done</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#character_classes.Quest.is_done" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Quest.item">
+<span class="sig-name descname"><span class="pre">item</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#character_classes.Quest.item" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Quest.kind">
+<span class="sig-name descname"><span class="pre">kind</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#character_classes.Quest.kind" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Quest.location_id">
+<span class="sig-name descname"><span class="pre">location_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#character_classes.Quest.location_id" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Quest.pos">
+<span class="sig-name descname"><span class="pre">pos</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#character_classes.Quest.pos" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Quest.quantity">
+<span class="sig-name descname"><span class="pre">quantity</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#character_classes.Quest.quantity" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Quest.receiving_npc_id">
+<span class="sig-name descname"><span class="pre">receiving_npc_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#character_classes.Quest.receiving_npc_id" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Quest.reward">
+<span class="sig-name descname"><span class="pre">reward</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#character_classes.Quest.reward" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Quest.reward_item">
+<span class="sig-name descname"><span class="pre">reward_item</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#character_classes.Quest.reward_item" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Quest.reward_item_quantity">
+<span class="sig-name descname"><span class="pre">reward_item_quantity</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#character_classes.Quest.reward_item_quantity" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Quest.start_condition">
+<span class="sig-name descname"><span class="pre">start_condition</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#character_classes.Quest.start_condition" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="character_classes.QuestKind">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">character_classes.</span></span><span class="sig-name descname"><span class="pre">QuestKind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names=&lt;not</span> <span class="pre">given&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qualname=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary=None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#character_classes.QuestKind" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></p>
+<p>Enumeration of quest types</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.QuestKind.BATTLE">
+<span class="sig-name descname"><span class="pre">BATTLE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></em><a class="headerlink" href="#character_classes.QuestKind.BATTLE" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.QuestKind.BATTLE_AND_DELIVERY">
+<span class="sig-name descname"><span class="pre">BATTLE_AND_DELIVERY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">7</span></em><a class="headerlink" href="#character_classes.QuestKind.BATTLE_AND_DELIVERY" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.QuestKind.DELIVERY">
+<span class="sig-name descname"><span class="pre">DELIVERY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#character_classes.QuestKind.DELIVERY" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.QuestKind.FIND">
+<span class="sig-name descname"><span class="pre">FIND</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#character_classes.QuestKind.FIND" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.QuestKind.FIND_AND_GRAB">
+<span class="sig-name descname"><span class="pre">FIND_AND_GRAB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">9</span></em><a class="headerlink" href="#character_classes.QuestKind.FIND_AND_GRAB" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.QuestKind.GO">
+<span class="sig-name descname"><span class="pre">GO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#character_classes.QuestKind.GO" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.QuestKind.TRACE">
+<span class="sig-name descname"><span class="pre">TRACE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#character_classes.QuestKind.TRACE" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.QuestKind.UNION">
+<span class="sig-name descname"><span class="pre">UNION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">6</span></em><a class="headerlink" href="#character_classes.QuestKind.UNION" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.QuestKind.UNION_AND_GRAB">
+<span class="sig-name descname"><span class="pre">UNION_AND_GRAB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">8</span></em><a class="headerlink" href="#character_classes.QuestKind.UNION_AND_GRAB" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="character_classes.Weapon">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">character_classes.</span></span><span class="sig-name descname"><span class="pre">Weapon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dmg_min</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dmg_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cost</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_tradable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#character_classes.Weapon" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>The weapons belongs to NPCs</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Weapon.cost">
+<span class="sig-name descname"><span class="pre">cost</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#character_classes.Weapon.cost" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Weapon.dmg_max">
+<span class="sig-name descname"><span class="pre">dmg_max</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#character_classes.Weapon.dmg_max" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Weapon.dmg_min">
+<span class="sig-name descname"><span class="pre">dmg_min</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#character_classes.Weapon.dmg_min" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Weapon.id">
+<span class="sig-name descname"><span class="pre">id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#character_classes.Weapon.id" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Weapon.is_tradable">
+<span class="sig-name descname"><span class="pre">is_tradable</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#character_classes.Weapon.is_tradable" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Weapon.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#character_classes.Weapon.name" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="character_classes.Weapon.range">
+<span class="sig-name descname"><span class="pre">range</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#character_classes.Weapon.range" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="character_classes.add_new_line">
+<span class="sig-prename descclassname"><span class="pre">character_classes.</span></span><span class="sig-name descname"><span class="pre">add_new_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_part</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#character_classes.add_new_line" title="Link to this definition">¶</a></dt>
+<dd><p>Adds line before new part if old part does not end with new line</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>result</strong> (<em>str</em>) – The old part</p></li>
+<li><p><strong>new_part</strong> (<a href="#id1"><span class="problematic" id="id2">str_</span></a>) – The new part of result</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Concatenated result</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/Condottiers vs Corsairs.png" alt="Logo of team01"/>
+            </a></p>
+<h1 class="logo"><a href="index.html">team01</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">src</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="starting_bot.html">starting_bot module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="all_maps.html">all_maps module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">character_classes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fill_data.html">fill_data module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="game_bot_buttons.html">game_bot_buttons module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="load_data.html">load_data module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="load_all.html">load_all module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tables.html">tables module</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">src</a><ul>
+      <li>Previous: <a href="all_maps.html" title="previous chapter">all_maps module</a></li>
+      <li>Next: <a href="fill_data.html" title="next chapter">fill_data module</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024, suzannpi and luisrhyd.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/character_classes.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

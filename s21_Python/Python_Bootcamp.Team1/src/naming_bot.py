@@ -51,9 +51,9 @@ def get_token(var: str) -> str:
     return token
 
 
-def get_dicts() -> Tuple[
-    Dict[str, Dict[str, List[str]]], Dict[str, Dict[str, List[str]]]
-]:
+def get_dicts() -> (
+    Tuple[Dict[str, Dict[str, List[str]]], Dict[str, Dict[str, List[str]]]]
+):
     """Import dictionaries from json file
 
     Returns
